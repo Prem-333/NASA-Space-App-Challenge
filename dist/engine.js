@@ -66,14 +66,16 @@ export function flightChoices(f) {
   if(f.step===0) return [{id:'depart',title:'Commit departure burn',detail:'3,200 m/s · leave Earth orbit',dv:3200,science:1}];
   if(f.step===1) return [
     {id:'precision',title:'Correct the trajectory',detail:'Spend 100 m/s to preserve the science plan.',dv:100,science:1},
-    {id:'economy',title:'Take the wider approach',detail:'Spend 40 m/s; lose 12% of science coverage.',dv:40,science:0.88}
+    {id:'economy',title:'Take the wider approach',detail:'Spend 40 m/s; lose 12% of science coverage.',dv:40,science:0.88},
+    {id:'ignore-navigation',title:'Ignore the navigation update',detail:'No correction burn. The spacecraft misses the lunar encounter and leaves the mission corridor.',dv:0,science:0,failure:'escape'}
   ];
   if(f.step===2) return [
     {id:'repair',title:'Recover the solar array',detail:'Use 80 m/s for a recovery maneuver. Restore full output.',dv:80,science:1,generation:1,hours:2},
     {id:'shed',title:'Switch to reduced operations',detail:`Keep ${c.power.id==='redundant'?'85':'65'}% array output. Science falls if power is insufficient.`,dv:0,science:1,generation:c.power.id==='redundant'?0.85:0.65,hours:0},
     {id:'coast',title:'Wait for a better Sun angle',detail:'Restore output after 8 hours; lose 8% of planned science.',dv:0,science:0.92,generation:1,hours:8}
   ];
-  if(f.step===3) return [{id:'arrive',title:c.mission.id==='flyby'?'Execute the lunar flyby':c.mission.id==='lander'?'Brake, descend, and land':'Insert into polar orbit',detail:`${(c.mission.capture+c.mission.landing).toLocaleString()} m/s arrival burn${c.mission.id==='lander'?' · simplified descent':''}`,dv:c.mission.capture+c.mission.landing,science:1}];
+  if(f.step===3) return [{id:'arrive',title:c.mission.id==='flyby'?'Execute the lunar flyby':c.mission.id==='lander'?'Brake, descend, and land':'Insert into polar orbit',detail:`${(c.mission.capture+c.mission.landing).toLocaleString()} m/s arrival burn${c.mission.id==='lander'?' · simplified descent':''}`,dv:c.mission.capture+c.mission.landing,science:1},
+    {id:'skip-arrival',title:c.mission.id==='flyby'?'Point directly at the surface':'Disable arrival guidance',detail:c.mission.id==='orbiter'?'No capture burn. The spacecraft passes the Moon and escapes.':'Uncontrolled surface approach. Impact destroys the spacecraft.',dv:0,science:0,failure:c.mission.id==='orbiter'?'escape':'impact'}];
   if(f.step===4) return [
     {id:'relay',title:c.comms.id==='relay'?'Use the relay path':'Wait for the next contact',detail:c.comms.id==='relay'?'Your relay-ready dish preserves all planned science.':'Recover the contact after 6 hours; return 92% of remaining science.',dv:0,science:c.comms.id==='relay'?1:0.92,hours:c.comms.id==='relay'?0:6},
     {id:'priority',title:'Downlink the priority data',detail:'End on schedule; return 80% of remaining science.',dv:0,science:0.8,hours:0}
@@ -86,11 +88,14 @@ export function advanceFlight(f,choiceId) {
   if(!choice) throw new Error('Unknown flight command.');
   const c=calculate(f.design,f.missionId,f.mode);
   const fuelCost=fuelForBurn(c.dry+f.fuel,choice.dv,c.engine.isp);
-  const failed=fuelCost>f.fuel+0.000001;
+  const fuelFailure=fuelCost>f.fuel+0.000001;
+  const failed=fuelFailure||!!choice.failure;
+  const outcome=choice.failure||(fuelFailure?'escape':null);
+  const failureReason=outcome==='impact'?'Guidance was disabled on a surface-intercept trajectory. The spacecraft struck the Moon.':choice.failure==='escape'?'The required trajectory maneuver was skipped. The spacecraft left the lunar mission corridor.':fuelFailure?'The required burn exceeded the remaining propellant. The target trajectory could not be reached.':null;
   let scienceFactor=f.scienceFactor*choice.science;
   if(f.step===2 && choice.generation) scienceFactor*=Math.min(1,c.generation*choice.generation/c.draw);
-  const next={...f,fuel:failed?f.fuel:Math.max(0,f.fuel-fuelCost),scienceFactor,generationFactor:choice.generation??f.generationFactor,extraHours:f.extraHours+(choice.hours||0),step:failed?f.step: f.step+1,failed,complete:failed||f.step===4,
-    decisions:[...f.decisions,choiceId],log:[...f.log,{stage:FLIGHT_STAGES[f.step].name,command:choice.title,dv:choice.dv,fuel:failed?0:fuelCost,result:failed?'Burn rejected: insufficient propellant. Mission ended.':choice.detail}]};
+  const next={...f,fuel:failed?f.fuel:Math.max(0,f.fuel-fuelCost),scienceFactor,generationFactor:choice.generation??f.generationFactor,extraHours:f.extraHours+(choice.hours||0),step:failed?f.step: f.step+1,failed,outcome,failureReason,complete:failed||f.step===4,
+    decisions:[...f.decisions,choiceId],log:[...f.log,{stage:FLIGHT_STAGES[f.step].name,command:choice.title,dv:choice.dv,fuel:failed?0:fuelCost,result:failed?failureReason:choice.detail}]};
   next.history=[...f.history,{stage:FLIGHT_STAGES[f.step].short,fuel:next.fuel,science:f.step===4&&!failed?c.science*scienceFactor:0}];
   return next;
 }

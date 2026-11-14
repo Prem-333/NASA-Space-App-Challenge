@@ -44,6 +44,14 @@ export function createSpaceScene(host,{kind='flight',design,missionId='orbiter',
   }else{
     const grid=new T.GridHelper(14,28,'#3a6159','#203532');grid.position.y=-2.3;grid.material.transparent=true;grid.material.opacity=.5;scene.add(grid);orbit(new T.Vector3(0,-2.28,0),3.8,'#b8d89b');orbit(new T.Vector3(0,-2.28,0),4,'#4d6b5c');
   }
+  const wreck=new T.Group();scene.add(wreck);wreck.visible=false;
+  const debris=[];
+  for(let i=0;i<36;i++){
+    const rock=new T.Mesh(new T.TetrahedronGeometry(.035+(i%4)*.018),new T.MeshStandardMaterial({color:i%3?'#77736d':'#ab8a4c',roughness:.85}));
+    wreck.add(rock);debris.push(rock);
+  }
+  const flash=new T.Mesh(new T.SphereGeometry(1,24,16),new T.MeshBasicMaterial({color:'#ffbd68',transparent:true,opacity:.7,depthWrite:false}));wreck.add(flash);
+  const failureTrail=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]),new T.LineBasicMaterial({color:'#ef8b73'}));scene.add(failureTrail);failureTrail.visible=false;
   let disposed=false,visible=true,paused=false,view=kind==='hangar'?'inspection':'overview',exploded=false,angle=.48,elevation=.4,zoom=1,rotation=0,auto=motion,time=0,previous=0,frame=0,selected=null;
   let sample={route:ROUTE_STEPS[step],progress:0,burning:false};const target=new T.Vector3(),desired=new T.Vector3();const raycaster=new T.Raycaster();
   let drag=null,dragged=false;
@@ -74,13 +82,34 @@ export function createSpaceScene(host,{kind='flight',design,missionId='orbiter',
     }else{
       const position=curve.getPoint(sample.route);craft.group.position.copy(position);const tangent=curve.getTangent(sample.route).normalize();craft.group.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),tangent);
       if(sample.route>=1&&step>=4&&missionId==='orbiter'&&!sample.burning){const a=motion?time*.14:0;craft.group.position.set(13,Math.cos(a)*3.3,Math.sin(a)*3.3);craft.group.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),new T.Vector3(0,-Math.sin(a),Math.cos(a)));}
-      if(missionId==='lander'&&sample.route>=.98)craft.group.quaternion.slerp(new T.Quaternion(),.15);
+      if(missionId==='lander'&&sample.route>=.98)craft.group.quaternion.slerp(new T.Quaternion(),sample.route>=1?1:.5);
       trail.geometry.setDrawRange(0,Math.max(2,Math.round(sample.route*181)));earth.rotation.y=motion?time*.022:.2;moon.rotation.y=.4;
       craft.plume.visible=sample.burning;craft.plume.scale.set(1,1+(motion?Math.sin(time*47)*.13:0),1);
       craft.wings[0].rotation.y=step===2&&!sample.burning?.42:Math.sin(time*.25)*.035;
+      // Outcome presentation follows the committed result, including after reload.
+      craft.group.visible=true;wreck.visible=false;failureTrail.visible=!!sample.outcome;
+      if(sample.outcome){
+        const p=T.MathUtils.clamp(sample.eventProgress??1,0,1),origin=curve.getPoint(sample.originRoute??sample.route);
+        const impact=sample.outcome==='impact',endpoint=impact?new T.Vector3(13,2.15,0):new T.Vector3(27,12,-5);
+        const travel=impact?Math.min(1,p/.65):p;
+        craft.group.position.copy(origin).lerp(endpoint,travel);
+        craft.group.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),endpoint.clone().sub(origin).normalize());
+        craft.plume.visible=false;
+        failureTrail.geometry.setFromPoints([origin,craft.group.position]);
+        if(impact&&p>=.65){
+          craft.group.visible=false;wreck.visible=true;wreck.position.copy(endpoint);
+          const burst=(p-.65)/.35;
+          flash.scale.setScalar(.12+burst*1.1);flash.material.opacity=(1-burst)*.7;
+          debris.forEach((d,i)=>{const a=i*2.39996,r=(.1+burst*1.4)*(1+(i%5)*.12);d.position.set(Math.cos(a)*r,.15+Math.sin(i*3)*.15+burst*(.4+(i%7)*.1),Math.sin(a)*r);d.rotation.set(i+burst*2,i*.7,burst*3);});
+        }
+      }
       if(view==='follow'){target.copy(craft.group.position);desired.copy(target).add(new T.Vector3(Math.sin(angle)*4.8*zoom,2.1+elevation*2,Math.cos(angle)*4.8*zoom));craft.group.scale.setScalar(.35);}
       else if(view==='moon'){target.copy(moonPosition);desired.copy(target).add(new T.Vector3(Math.sin(angle)*10*zoom,3+elevation*6,Math.cos(angle)*10*zoom));craft.group.scale.setScalar(.35);}
-      else{target.set(0,2,0);const distance=(camera.aspect<1.1?57:40)*zoom;desired.set(Math.sin(angle*.35)*distance,10+elevation*12,Math.cos(angle*.35)*distance);craft.group.scale.setScalar(.5);}
+      else{target.set(0,2,0);const distance=(camera.aspect<1.1?57:40)*zoom;desired.set(Math.sin(angle*.35)*distance,10+elevation*12,Math.cos(angle*.35)*distance);craft.group.scale.setScalar(missionId==='lander'?.35:.5);}
+      if(sample.outcome){
+        target.copy(sample.outcome==='impact'?new T.Vector3(13,2.3,0):craft.group.position);
+        desired.copy(target).add(new T.Vector3(3.8*zoom,3.4,7*zoom));craft.group.scale.setScalar(.35);
+      }
     }
     camera.position.lerp(desired,previous===now&&!camera.position.length()?1:motion?.08:1);camera.lookAt(target);renderer.render(scene,camera);
   }

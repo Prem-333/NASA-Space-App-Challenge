@@ -6,8 +6,8 @@ Date: 14 November 2026. Environment: Windows, Node.js 24, installed Google Chrom
 
 | Check | Result |
 |---|---|
-| Simulation, playback and spacecraft tests | **50 passed, 0 failed** |
-| Flight scenario branches | All **36** starter branches traversed; nonnegative fuel and bounded finite scores |
+| Simulation, playback and spacecraft tests | **53 passed, 0 failed** |
+| Flight scenario branches | All **57** starter branches traversed; nonnegative fuel and bounded finite scores |
 | Starter missions | All three pass preflight and complete the conservative plan in both difficulty modes |
 | Browser end-to-end suite | **Passed** |
 | Interactive motion suite | **Passed** — cameras, exploded view, pause/resume, speed, skip, fullscreen, reload/navigation safety, reduced motion and WebGL fallback |
@@ -74,3 +74,9 @@ The browser test regenerates `artifacts/accessibility.json`, screenshots, and sa
 - Desktop and phone screenshots reviewed after the geometry and copy changes.
 
 - Risk forecasts checked against winning and losing paths, immutable input state, and insufficient propellant. Browser coverage includes the warning and failed-objective screens.
+
+## Flight outcomes (1.3)
+
+- 53 unit tests, covering 57 reachable starter branches.
+- Impact and escape terminate the mission and survive saved-state reconstruction.
+- Browser coverage: animated impact, trajectory loss, successful touchdown, retry, keyboard commands, mobile layout, reduced motion and result-screen accessibility.

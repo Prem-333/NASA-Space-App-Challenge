@@ -109,5 +109,18 @@ test('all reachable branches preserve physics and valid scores',()=>{
     const visit=f=>{assert.ok(Number.isFinite(f.fuel)&&f.fuel>=0&&f.fuel<=f.design.fuel);if(f.complete){const s=summarize(f);assert.ok(Number.isFinite(s.score)&&s.score>=0&&s.score<=100);count++;return;}for(const c of flightChoices(f))visit(advanceFlight(f,c.id));};
     visit(createFlight(DEFAULT_DESIGNS[mission.id],mission.id));
   }
-  assert.equal(count,36);
+  assert.equal(count,57);
+});
+
+for(const [mission,commands,outcome] of [
+ ['orbiter',['depart','ignore-navigation'],'escape'],
+ ['orbiter',['depart','precision','repair','skip-arrival'],'escape'],
+ ['lander',['depart','precision','repair','skip-arrival'],'impact']
+])test(`${mission} ${commands.at(-1)} produces ${outcome} and survives replay`,()=>{
+ let f=createFlight(DEFAULT_DESIGNS[mission],mission);
+ for(const id of commands)f=advanceFlight(f,id);
+ assert.equal(f.failed,true);assert.equal(f.complete,true);assert.equal(f.outcome,outcome);
+ assert.equal(summarize(f).score,0);assert.equal(summarize(f).objectiveMet,false);
+ assert.deepEqual(restoreFlight({...f,outcome:'success',name:'Hail Mary I'}),{...f,name:'Hail Mary I'});
+ assert.strictEqual(advanceFlight(f,'arrive'),f);
 });

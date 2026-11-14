@@ -80,3 +80,7 @@ The Earth–Moon path is an authored 3D curve. Planet sizes, distance, motion, o
 During a burn, displayed propellant is calculated from the same rocket equation at the fraction of delta-v visually completed. This is not a claim about real engine thrust or burn duration. Presentation time is compressed into seconds; changing playback speed, pausing, or skipping does not change physical outcomes, elapsed mission schedule, or scores.
 
 A command is committed and saved exactly once when selected. The animation then presents that outcome. Reloading or leaving the view resumes from the committed state rather than losing or reapplying a maneuver. Reduced-motion preferences remove mandatory animation waits. A WebGL fallback retains the decision interface and telemetry without the 3D canvas.
+
+## Scripted failure scenarios (1.3)
+
+Ignoring navigation is an authored lost-encounter scenario. Disabling arrival guidance causes escape for the orbiter and impact for a surface-intercept trajectory. These are deterministic gameplay branches, not numerically integrated flight dynamics or real spacecraft failure probabilities. The impact flash and debris are illustrative vacuum-impact effects. Normal arrival and science-result rules remain unchanged. Older saved command sequences retain their outcomes.

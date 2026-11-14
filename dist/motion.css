@@ -54,3 +54,31 @@
 @media(max-width:760px){.hangar-scene{height:390px}.hangar-experience>.scene-topline{gap:6px}.scene-chip{letter-spacing:.02em}.assembly-label{font-size:7px;padding:4px}}
 
 .risk-notice{display:block;margin:14px 0;padding:12px 14px;border-left:3px solid #e5b96b;background:#2b251b;color:#f2d7a5;text-align:left;border-radius:2px}.risk-notice.danger{border-color:#ed9e91;background:#30201f;color:#ffc5ba}.risk-notice strong{display:block;font-size:12px!important;line-height:1.5}.risk-notice>span{display:block;margin-top:4px;font-size:11px;line-height:1.65}.command-card .risk-notice{margin-bottom:0}.risk-notice strong{color:inherit!important}
+
+/* Flight mode is a playfield with a command dock, rather than a dashboard column. */
+.flight-game .workspace{margin-left:0}.flight-game .sidebar{display:none}
+.flight-game .topbar{height:52px;padding:0 24px;background:#080d14}
+.flight-game main{max-width:none;padding:16px 24px 30px}
+.flight-game main>.page-heading{margin-bottom:12px}.flight-game main>.page-heading h1{font-size:24px}
+.flight-game .flight-progress{margin-bottom:12px;padding:10px 16px}
+.flight-game .flight-layout{display:block}.flight-game .flight-layout>div:first-child{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:0;border:1px solid #354047;border-radius:8px;overflow:hidden;background:#070d16}
+.flight-game .flight-layout>div:first-child>.panel{margin:0;border:0;border-radius:0;min-width:0}
+.flight-game .flight-scene{height:clamp(540px,70vh,850px)}
+.flight-game .command-panel{padding:22px 20px;background:#111a23;border-left:1px solid #34414b!important;max-height:900px;overflow:auto}
+.flight-game .command-panel h2{font-size:25px}.flight-game .command-panel>p{font-size:12px}
+.flight-game .command-options{gap:10px}.flight-game .command-card{padding:13px 10px;gap:9px;background:#19242d}.flight-game .command-card>svg{display:none}.flight-game .command-card strong{font-size:13px}.flight-game .command-card small{font-size:11px;line-height:1.5}
+.flight-game .command-card:hover{background:#25342d;transform:translateX(-3px)}
+.flight-game .command-panel .risk-notice{padding:8px 9px;margin-top:9px}.flight-game .command-panel .risk-notice>span{font-size:10px}
+.flight-game .telemetry{position:static;display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px;padding:16px 20px;margin-top:10px;background:#101820}.flight-game .telemetry>h3,.flight-game .telemetry>.label,.flight-game .telemetry>.advisor{display:none}.flight-game .telemetry-readout{margin:0;padding:0;border:0;min-width:120px}.flight-game .telemetry-readout>strong{font-size:24px}.flight-game .telemetry-pair{padding:0;gap:12px}.flight-game .telemetry>.text-button{width:auto;margin-left:auto}
+.flight-game .flight-log{margin-top:22px}.flight-game .footer{display:none}
+.game-ending{margin-bottom:28px}.game-ending .flight-scene{height:68vh;min-height:510px}.game-ending .cinema-headline,.game-ending .scene-reticle,.game-ending .scene-readouts,.game-ending .cinema-controls,.game-ending .cinema-bottom{display:none}
+.game-result{position:absolute;z-index:5;left:5%;top:25%;max-width:440px;padding:24px;background:#0b1421e8;border:1px solid #6d885f;border-top:3px solid #caefab;border-radius:4px;color:#e6f5dd}
+.game-result>span{font-size:12px;letter-spacing:.22em;color:#ceefb5;font-weight:700}.game-result>strong{display:block;font:600 clamp(28px,3vw,44px)/1.15 var(--display);margin-top:14px}.game-result p{font-size:13px;line-height:1.7;color:#c5d1d8;margin:16px 0 22px}.game-result .button{margin:0 6px 6px 0;gap:8px}.game-result.defeat{border-color:#a56b61;border-top-color:#ee9c89}.game-result.defeat>span{color:#ffc0ae}
+.flight-game .game-ending~.page-heading{margin-top:20px}
+@media(max-width:1050px){.flight-game .flight-layout>div:first-child{grid-template-columns:minmax(0,1fr) 320px}.flight-game main{padding:12px}.flight-game .command-panel{padding:18px 14px}.flight-game .scene-readouts strong{font-size:24px}}
+@media(max-width:760px){.flight-game .flight-layout>div:first-child{display:block}.flight-game .flight-scene{height:460px}.flight-game .command-panel{border-left:0!important;border-top:1px solid #34414b!important;max-height:none}.flight-game .topbar{padding:0 14px}.flight-game .telemetry{gap:16px}.flight-game .telemetry-readout{min-width:110px}.game-result{left:5%;right:5%;top:22%;padding:20px;max-width:none}.game-ending .flight-scene{min-height:580px}.flight-game main>.page-heading h1{font-size:21px}}
+
+.flight-game .workspace{margin-left:64px}.flight-game .sidebar{display:flex;width:64px;padding:18px 8px;border-color:#27333f;background:#080d14}.flight-game .sidebar .brand{padding:0;justify-content:center}.flight-game .sidebar .brand>span,.flight-game .sidebar-bottom,.flight-game .workspace-label{display:none}.flight-game .sidebar nav{margin-top:34px;gap:14px}.flight-game .nav-item{padding:13px;justify-content:center}.flight-game .nav-item>span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(100%)}.flight-game .nav-item .live-dot{display:none}.flight-game .nav-item.active:before{left:-8px}
+@media(max-width:760px){.flight-game .sidebar{top:0;bottom:0;height:100vh;width:48px;padding:14px 4px;flex-direction:column}.flight-game .sidebar .brand{display:flex}.flight-game .sidebar .brand img{width:29px;height:29px}.flight-game .sidebar nav{display:flex;flex-direction:column;margin-top:25px}.flight-game .nav-item{padding:11px}.flight-game .workspace{margin-left:48px}.flight-game .saved-indicator{display:none}.flight-game .telemetry-readout{min-width:100px}.flight-game .scene-topline{font-size:8px}.game-result .button{font-size:11px;padding:10px}.flight-game .breadcrumb{font-size:8px;gap:5px}}
+
+.flight-game .cinema-vignette{height:auto;bottom:100px}.flight-game .scene-coordinate{top:auto;bottom:191px}.flight-game .scene-readouts,.flight-game .executing .scene-readouts{top:auto;bottom:128px}.flight-game .maneuver-overlay{top:auto;bottom:240px}.flight-game .countdown{top:35%}.flight-game .game-ending .cinema-vignette{bottom:0}.flight-game .game-ending .scene-coordinate{top:auto;bottom:25px}
