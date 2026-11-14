@@ -15,7 +15,7 @@ const command=async id=>{await page.locator(`[data-action="flight-command"][data
 const overflowing=()=>page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
 const axeResults=[];
 async function audit(label){const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();axeResults.push({label,violations:result.violations.map(v=>({id:v.id,impact:v.impact,description:v.description,nodes:v.nodes.map(n=>({target:n.target,summary:n.failureSummary}))}))});}
-async function complete(id,choices){await nav('briefing');await page.locator(`[data-action="select-mission"][data-id="${id}"]`).click();await nav('builder');assert.equal(await page.locator('[data-action="launch"]').isEnabled(),true);await click('launch');for(const c of choices)await command(c);assert.equal(await page.locator('.result-hero').count(),1);}
+async function complete(id,choices){await nav('briefing');await page.locator(`[data-action="select-mission"][data-id="${id}"]`).click();await nav('builder');assert.equal(await page.locator('[data-action="launch"]').isEnabled(),true);await click('launch');for(const c of choices){if(id==='lander'&&c==='priority'){assert.equal(await page.locator('[data-id="priority"] .risk-notice.danger').count(),1);await audit('risk warning');}await command(c);}assert.equal(await page.locator('.result-hero').count(),1);}
 try{
   await page.goto('http://localhost:4173');await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(600);
   assert.match(await page.title(),/Mission desk/);assert.equal(await page.locator('.mission-card').count(),3);assert.equal(await overflowing(),false);
@@ -37,7 +37,7 @@ try{
   await page.screenshot({path:'artifacts/desktop-debrief.png',fullPage:true});await audit('debrief');
   const reportPromise=page.waitForEvent('download');await click('export-report');await(await reportPromise).saveAs('artifacts/test-flight-report.md');
   await complete('flyby',['depart','precision','repair','arrive','relay']);
-  await complete('lander',['depart','economy','shed','arrive','priority']);assert.match(await page.locator('.result-hero').textContent(),/OBJECTIVE NOT MET/);
+  await complete('lander',['depart','economy','shed','arrive','priority']);assert.match(await page.locator('.result-hero').textContent(),/OBJECTIVE NOT MET/);assert.match(await page.locator('.result-hero').textContent(),/short/);await audit('failed objective');
   await complete('lander',['depart','precision','repair','arrive','relay']);assert.match(await page.locator('.result-hero').textContent(),/SCIENCE OBJECTIVE ACHIEVED/);
   await nav('archive');assert.equal(await page.locator('.archive-card').count(),4);
   // Viewing an old result must not overwrite an unfinished active flight.

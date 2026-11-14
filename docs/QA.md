@@ -6,14 +6,14 @@ Date: 14 November 2026. Environment: Windows, Node.js 24, installed Google Chrom
 
 | Check | Result |
 |---|---|
-| Simulation, playback and spacecraft tests | **46 passed, 0 failed** |
+| Simulation, playback and spacecraft tests | **50 passed, 0 failed** |
 | Flight scenario branches | All **36** starter branches traversed; nonnegative fuel and bounded finite scores |
 | Starter missions | All three pass preflight and complete the conservative plan in both difficulty modes |
 | Browser end-to-end suite | **Passed** |
 | Interactive motion suite | **Passed** — cameras, exploded view, pause/resume, speed, skip, fullscreen, reload/navigation safety, reduced motion and WebGL fallback |
 | Browser page/console errors | **0** during final suite |
 | Failed runtime requests | **0** during final suite |
-| Automated accessibility | **0 reported violations** across 8 regression screen states and 3 additional motion states |
+| Automated accessibility | **0 reported violations** across 10 regression screen states and 3 additional motion states |
 | Responsive overflow | None at 390, 768 and 1440 px in tested views; active flight and debrief also checked at 390 px |
 | Network independence | Game loaded and worked with all non-local requests blocked |
 | Runtime security boundary | No keys, external model calls, tracking, or server-side user database |
@@ -72,3 +72,5 @@ The browser test regenerates `artifacts/accessibility.json`, screenshots, and sa
 - Reset reassembles hardware and clears the exploded-view toggle.
 - Checked finite geometry across 27 mission, array, and antenna combinations.
 - Desktop and phone screenshots reviewed after the geometry and copy changes.
+
+- Risk forecasts checked against winning and losing paths, immutable input state, and insufficient propellant. Browser coverage includes the warning and failed-objective screens.

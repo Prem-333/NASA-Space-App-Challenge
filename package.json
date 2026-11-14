@@ -7,10 +7,10 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "start": "node scripts/serve.mjs",
-    "test": "node --test tests/engine.test.mjs tests/playback.test.mjs tests/spacecraft.test.mjs",
+    "test": "node --test tests/engine.test.mjs tests/playback.test.mjs tests/spacecraft.test.mjs tests/flight-risk.test.mjs",
     "test:e2e": "node tests/browser.mjs",
     "test:motion": "node tests/motion-browser.mjs",
-    "check": "node --check dist/app.js && node --check dist/engine.js && node --check dist/data.js && node --check dist/space-scene.js && node --check dist/experience.js && node --check dist/playback.js && node --check dist/spacecraft.js"
+    "check": "node --check dist/app.js && node --check dist/engine.js && node --check dist/data.js && node --check dist/space-scene.js && node --check dist/experience.js && node --check dist/playback.js && node --check dist/spacecraft.js && node --check dist/flight-risk.js"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

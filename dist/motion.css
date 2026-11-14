@@ -52,3 +52,5 @@
 .hangar-controls{background:#111b22}.hangar-note{color:#b2bcbf;line-height:1.6}
 @media(min-width:1500px){.hangar-scene{height:480px}}
 @media(max-width:760px){.hangar-scene{height:390px}.hangar-experience>.scene-topline{gap:6px}.scene-chip{letter-spacing:.02em}.assembly-label{font-size:7px;padding:4px}}
+
+.risk-notice{display:block;margin:14px 0;padding:12px 14px;border-left:3px solid #e5b96b;background:#2b251b;color:#f2d7a5;text-align:left;border-radius:2px}.risk-notice.danger{border-color:#ed9e91;background:#30201f;color:#ffc5ba}.risk-notice strong{display:block;font-size:12px!important;line-height:1.5}.risk-notice>span{display:block;margin-top:4px;font-size:11px;line-height:1.65}.command-card .risk-notice{margin-bottom:0}.risk-notice strong{color:inherit!important}

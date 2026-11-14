@@ -6,4 +6,8 @@ Exploded view now moves each solar wing independently, separates the service ass
 
 Replaced generic slogans throughout the mission desk, configuration, flight view, debrief and reference screens with direct operational wording. Refined lighting, inspection framing, and component tags.
 
-Validation: 46 unit tests; complete flight regression and interaction suites; automated accessibility checks; desktop and mobile visual inspection.
+Validation: 50 unit tests; complete flight regression and interaction suites; automated accessibility checks; desktop and mobile visual inspection.
+
+## Command warnings and failed attempts
+
+Command cards now warn when a decision reduces science or makes the target unreachable. Forecasts evaluate the existing command tree, without changing outcomes or adding random failures. An active warning persists when the target can no longer be reached. Debriefs show the exact science shortfall or propellant failure and suggest what to change. Archives distinguish missed objectives from mission failures.
