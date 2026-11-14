@@ -37,7 +37,7 @@ try{
   await page.screenshot({path:'artifacts/desktop-debrief.png',fullPage:true});await audit('debrief');
   const reportPromise=page.waitForEvent('download');await click('export-report');await(await reportPromise).saveAs('artifacts/test-flight-report.md');
   await complete('flyby',['depart','precision','repair','arrive','relay']);
-  await complete('lander',['depart','economy','shed','arrive','priority']);assert.match(await page.locator('.result-hero').textContent(),/A FLIGHT TO LEARN FROM/);
+  await complete('lander',['depart','economy','shed','arrive','priority']);assert.match(await page.locator('.result-hero').textContent(),/OBJECTIVE NOT MET/);
   await complete('lander',['depart','precision','repair','arrive','relay']);assert.match(await page.locator('.result-hero').textContent(),/SCIENCE OBJECTIVE ACHIEVED/);
   await nav('archive');assert.equal(await page.locator('.archive-card').count(),4);
   // Viewing an old result must not overwrite an unfinished active flight.

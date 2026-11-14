@@ -6,7 +6,7 @@ Date: 14 November 2026. Environment: Windows, Node.js 24, installed Google Chrom
 
 | Check | Result |
 |---|---|
-| Simulation and playback unit tests | **42 passed, 0 failed** |
+| Simulation, playback and spacecraft tests | **46 passed, 0 failed** |
 | Flight scenario branches | All **36** starter branches traversed; nonnegative fuel and bounded finite scores |
 | Starter missions | All three pass preflight and complete the conservative plan in both difficulty modes |
 | Browser end-to-end suite | **Passed** |
@@ -64,3 +64,11 @@ In another: `npm ci`, `npm run check`, `npm test`, then `npm run test:e2e`.
 For interactive 3D and motion controls: `npm run test:motion`.
 
 The browser test regenerates `artifacts/accessibility.json`, screenshots, and sample exports. It fails on functional errors, page/console errors, unexpected failed requests, or reported accessibility violations.
+
+## Assembly revision (1.2)
+
+- Verified opposing solar-wing separation and engine/antenna clearance from the bus.
+- Both wings and all service assemblies are selectable.
+- Reset reassembles hardware and clears the exploded-view toggle.
+- Checked finite geometry across 27 mission, array, and antenna combinations.
+- Desktop and phone screenshots reviewed after the geometry and copy changes.

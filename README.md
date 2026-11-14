@@ -1,6 +1,6 @@
 # Hail Mary — Mission Control
 
-**Build a spacecraft. Make the hard calls. Bring the science home.**
+**Configure a lunar spacecraft. Check its margins. Command the flight.**
 
 A complete browser game for Team Hail Mary's **Space Mission Design Game** project. Choose a lunar objective, assemble a spacecraft, pass six engineering checks, command a five-stage mission, and learn from a reproducible flight report.
 
@@ -66,7 +66,7 @@ npm run test:motion
 
 The test suite uses the installed Google Chrome (`channel: 'chrome'`) and Playwright. It saves screenshots, download samples, and accessibility results in `artifacts/`. Automated accessibility testing is a useful check, not a claim of complete accessibility certification.
 
-42 unit tests cover the rocket equation and its inverse, mass conservation, all starter missions in both modes, blocking checks, communication bottlenecks, deterministic outcomes, replay validation, bad inputs, all 36 branches of the starter flight scenarios, and the playback clock and telemetry interpolation.
+46 unit tests cover the rocket equation and its inverse, mass conservation, all starter missions in both modes, blocking checks, communication bottlenecks, deterministic outcomes, replay validation, bad inputs, all 36 branches of the starter flight scenarios, and the playback clock and telemetry interpolation.
 
 Browser tests cover complete missions, objective success and failure, save/resume, design sharing, downloads, imports, archive preservation, local storage corruption, malformed share links, layouts at 390/768/1440 pixels, and operation with external requests blocked. Axe checks representative briefing, builder, flight, debrief, manual, and mobile screens.
 

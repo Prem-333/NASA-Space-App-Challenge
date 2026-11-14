@@ -15,8 +15,9 @@ try{
   await page.goto('http://localhost:4173');await nav('builder');
   assert.equal(await page.locator('#hangar-scene canvas').count(),1);assert.equal(await page.locator('.scene-fallback').count(),0);
   await exp('explode').click();assert.equal(await exp('explode').getAttribute('aria-pressed'),'true');
+  await page.waitForTimeout(700);assert.equal(await page.locator('.assembly-label:visible').count(),6);await page.getByRole('button',{name:'PORT ARRAY',exact:true}).click();assert.equal(await page.locator('[data-action="category"][data-id="power"]').getAttribute('aria-pressed'),'true');
   await exp('rotate').fill('90');assert.equal(await exp('auto').getAttribute('aria-pressed'),'false');
-  await exp('reset').click();assert.equal(await exp('rotate').inputValue(),'0');
+  await exp('reset').click();assert.equal(await exp('rotate').inputValue(),'0');assert.equal(await exp('explode').getAttribute('aria-pressed'),'false');await page.waitForTimeout(100);assert.equal(await page.locator('.assembly-label:visible').count(),0);
   await page.locator('#hangar-scene').focus();await page.keyboard.press('ArrowRight');await page.keyboard.press('+');
   await audit('3D hangar');
   await page.locator('[data-action="launch"]').click();
