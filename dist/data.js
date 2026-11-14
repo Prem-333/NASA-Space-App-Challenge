@@ -40,6 +40,7 @@ export const DEFAULT_DESIGNS = {
   lander:{engine:'cryo',power:'extended',comms:'dish',battery:'medium',payload:['radar','spectrometer'],launcher:'atlas',fuel:6000}
 };
 export const SOURCES = [
+  {title:'Blue Marble Earth Mosaic',publisher:'NASA / Goddard SVS',url:'https://svs.gsfc.nasa.gov/2915/',use:'Bundled Earth texture for the 3D flight view. Credit: NASA/Goddard Space Flight Center Scientific Visualization Studio; Reto Stockli (NASA/GSFC) and NASA Earth Observatory. Visualization only, not a live Earth feed.'},
   {title:'Moon Fact Sheet',publisher:'NASA / NSSDC',url:'https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html',use:'Lunar mean radius 1,737.4 km, surface gravity 1.62 m/s², and mean Earth–Moon distance 384,400 km.'},
   {title:'Ideal Rocket Equation',publisher:'NASA Glenn Research Center',url:'https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/ideal-rocket-equation/',use:'Δv = Isp × g₀ × ln(wet mass / dry mass). The builder and each simulated burn use this equation.'},
   {title:'A Unique Orbit for a Unique Mission',publisher:'NASA',url:'https://www.nasa.gov/wp-content/uploads/2023/10/nrho-artemis-orbit.pdf',use:'Approximate 3,200 m/s translunar injection and 1,350 m/s polar low-lunar-orbit capture. We add a 100 m/s cruise allowance.'},

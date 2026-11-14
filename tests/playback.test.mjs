@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { PlaybackClock, sampleManeuver, ROUTE_STEPS } from '../dist/playback.js';
+import { DEFAULT_DESIGNS } from '../dist/data.js';
+import { createFlight, advanceFlight, remainingDv } from '../dist/engine.js';
+const before=createFlight(DEFAULT_DESIGNS.orbiter,'orbiter');
+const after=advanceFlight(before,'depart');
+const close=(a,b)=>assert.ok(Math.abs(a-b)<1e-6,`${a} != ${b}`);
+test('playback starts at the authoritative before-state and ends at the after-state',()=>{const start=sampleManeuver(before,after,0),end=sampleManeuver(before,after,1);close(start.fuel,before.fuel);close(end.fuel,after.fuel);close(start.dv,remainingDv(before));close(end.dv,remainingDv(after));assert.equal(start.route,ROUTE_STEPS[0]);assert.equal(end.route,ROUTE_STEPS[1]);});
+test('interpolated delta-v follows the burn rather than linear propellant interpolation',()=>{const mid=sampleManeuver(before,after,.5);close(mid.dv,remainingDv(before)-1600);assert.ok(mid.fuel>after.fuel&&mid.fuel<before.fuel);assert.notEqual(mid.fuel,(before.fuel+after.fuel)/2);});
+test('playback clock pauses without progressing',()=>{const c=new PlaybackClock(8);c.tick(2);c.paused=true;c.tick(10);assert.equal(c.progress,.25);c.paused=false;c.tick(2);assert.equal(c.progress,.5);});
+test('playback rates change elapsed presentation time only',()=>{const c=new PlaybackClock(8);c.setRate(4);c.tick(1);assert.equal(c.progress,.5);const x=sampleManeuver(before,after,c.progress);close(x.dv,remainingDv(before)-1600);assert.deepEqual(after,advanceFlight(before,'depart'));});
+test('clock clamps overshoot, ignores invalid rates and invalid elapsed values',()=>{const c=new PlaybackClock(8);c.setRate(100);assert.equal(c.rate,1);c.tick(NaN);c.tick(-1);assert.equal(c.progress,0);c.tick(100);assert.equal(c.progress,1);assert.equal(c.done,true);});
+test('skip reaches the exact endpoint even while paused',()=>{const c=new PlaybackClock(8);c.paused=true;c.finish();assert.equal(c.progress,1);assert.equal(c.done,true);});
+test('sampling clamps out-of-range progress',()=>{assert.equal(sampleManeuver(before,after,-2).progress,0);assert.equal(sampleManeuver(before,after,9).fuel,after.fuel);});
+test('no-burn decisions retain propellant while science and power change',()=>{let f=before;for(const choice of ['depart','precision'])f=advanceFlight(f,choice);const next=advanceFlight(f,'shed');const mid=sampleManeuver(f,next,.5);close(mid.fuel,f.fuel);assert.equal(mid.burning,false);assert.ok(mid.power>sampleManeuver(f,next,1).power);});

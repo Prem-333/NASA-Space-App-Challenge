@@ -68,3 +68,15 @@ A failed burn yields zero. A flight can finish and earn a score while missing it
 The flight engine is a pure state transition over a configuration and a sequence of commands. Identical input and commands give identical results. Saved flights are reconstructed by replaying their commands; saved telemetry and score fields are not trusted. Designs are validated and normalized on import.
 
 The app uses no live NASA API. It bundles reference values, source links, and imagery. The spacecraft, fuel chart, flight path, and project emblem are original SVG/CSS work. No NASA insignia is used as a team logo.
+
+## Interactive visualization and playback (v1.1)
+
+The spacecraft is now an original procedural 3D model; the fuel chart and emblem remain SVG/CSS. The selected solar array, antenna, engine, instruments and battery affect the visible model. Mesh dimensions illustrate configuration changes but are not engineering drawings or measurements.
+
+Earth uses the NASA/Goddard SVS Blue Marble mosaic, https://svs.gsfc.nasa.gov/2915/, credited to NASA/Goddard Space Flight Center Scientific Visualization Studio, Reto Stockli (NASA/GSFC), and NASA's Earth Observatory.
+
+The Earth–Moon path is an authored 3D curve. Planet sizes, distance, motion, orbital tracks and arrival animations are schematic and deliberately compressed. They do not represent a numerical orbit solution. Engine plumes are visual effects.
+
+During a burn, displayed propellant is calculated from the same rocket equation at the fraction of delta-v visually completed. This is not a claim about real engine thrust or burn duration. Presentation time is compressed into seconds; changing playback speed, pausing, or skipping does not change physical outcomes, elapsed mission schedule, or scores.
+
+A command is committed and saved exactly once when selected. The animation then presents that outcome. Reloading or leaving the view resumes from the committed state rather than losing or reapplying a maneuver. Reduced-motion preferences remove mandatory animation waits. A WebGL fallback retains the decision interface and telemetry without the 3D canvas.

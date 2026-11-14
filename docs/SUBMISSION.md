@@ -37,11 +37,11 @@ The project works without an account, API key, or paid AI service. It has respon
 
 ## Technology
 
-HTML, CSS and modular JavaScript; a small pure calculation/state-transition engine; WebGL for the decorative lunar globe with a CSS fallback; original SVG schematics and charts; localStorage for device-local progress. Node's built-in HTTP server supports local demonstrations. Playwright and axe-core support functional and accessibility testing.
+HTML, CSS and modular JavaScript; a pure calculation/state-transition engine; locally bundled Three.js for the interactive spacecraft bay and Earth–Moon flight scene; a decorative WebGL lunar globe; original 3D geometry and SVG charts; localStorage for device-local progress. Node's built-in HTTP server supports local demonstrations. Playwright and axe-core support functional and accessibility testing. The 3D view includes camera controls, animated maneuvers, synchronized fuel telemetry, pause/speed/skip controls, reduced-motion support and a fallback without WebGL.
 
 ## Validation
 
-34 automated simulation tests cover physical relationships, constraints, both difficulty modes, input validation, replay integrity and all 36 branches of starter scenarios. Browser tests exercise all three missions, successful and missed objectives, save/resume, file import/export, share links, archive preservation, mobile/tablet layouts, and operation with external network requests blocked. See QA.md for the final recorded results and limitations.
+42 automated simulation and playback tests cover physical relationships, constraints, both difficulty modes, input validation, replay integrity, all 36 branches of starter scenarios, and animation timing/telemetry. Browser tests exercise all three missions, successful and missed objectives, save/resume, file import/export, share links, archive preservation, mobile/tablet layouts, and operation with external network requests blocked. Additional motion tests verify pause, speed, camera selection, reduced motion, WebGL fallback and reloads during maneuvers. See QA.md for the final recorded results and limitations.
 
 ## Honest limitations
 

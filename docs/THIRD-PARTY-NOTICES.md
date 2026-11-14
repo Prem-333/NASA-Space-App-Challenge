@@ -17,6 +17,18 @@ DM Sans and Space Grotesk are distributed under the SIL Open Font License. The d
 
 Font files are bundled under `dist/assets` and loaded locally by `fonts.css`.
 
+## Earth imagery
+
+`dist/assets/earth.png` is the 2048×1024 Blue Marble mosaic from https://svs.gsfc.nasa.gov/2915/.
+
+Original download: https://svs.gsfc.nasa.gov/vis/a000000/a002900/a002915/bluemarble-2048.png
+
+Credit: NASA/Goddard Space Flight Center Scientific Visualization Studio. Blue Marble data courtesy of Reto Stockli (NASA/GSFC) and NASA's Earth Observatory. The texture is a historic composite used for visualization, not a live feed.
+
+## Three.js
+
+The locally bundled Three.js 0.187.0 modules in `dist/vendor` are distributed under the MIT license. The complete license is included at `dist/vendor/LICENSE`. Upstream: https://github.com/mrdoob/three.js . No runtime CDN is used.
+
 ## Test dependencies
 
 Playwright, @axe-core/playwright and their dependencies are development/test dependencies only. Their package licenses are available in the installed packages and original upstream projects. They are not shipped in the game runtime.

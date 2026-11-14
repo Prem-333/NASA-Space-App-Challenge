@@ -14,6 +14,8 @@ Open a clean browser session at the game URL. Start on Mission desk. Use **Hidde
 
 “Our builder connects mass, power, fuel, communications and scientific return. More capability comes at a cost. NASA's rocket equation determines the available velocity budget. The game checks six constraints and explains what needs to change before launch.”
 
+For the v1.1 visual demo, briefly drag the spacecraft and toggle **Exploded view**. Show that changing the solar array or antenna changes the 3D configuration. Turn exploded view off before launching.
+
 ## 0:50–1:20 — Take command
 
 **Show:** Enter flight console. Commit departure burn. Correct the trajectory. Pause on Power management.
@@ -21,6 +23,8 @@ Open a clean browser session at the game URL. Start on Mission desk. Use **Hidde
 “The design becomes a flight. Propellant is consumed from the spacecraft's actual current mass. When the solar array has a problem, I can spend fuel to recover it, accept reduced operations, or wait and lose time. The flight director shows my remaining margin so this is an informed decision.”
 
 **Choose:** Recover the solar array → Insert into polar orbit → Wait for the next contact.
+
+In the animated version, select **Follow** during departure to show the spacecraft and engine plume. Use **2×** or **4×** playback to keep to the two-minute demo. You can pause a maneuver to explain the changing propellant and velocity budget, or use **Skip animation** to reach the next decision. These controls change presentation only; they do not alter the outcome.
 
 ## 1:20–1:40 — Explain the outcome
 

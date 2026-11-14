@@ -11,7 +11,7 @@ page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 const requests=[];page.on('requestfailed',r=>requests.push(r.url()));
 const nav=view=>page.locator(`button[data-action="nav"][data-view="${view}"]`).first().click();
 const click=action=>page.locator(`[data-action="${action}"]`).first().click();
-const command=id=>page.locator(`[data-action="flight-command"][data-id="${id}"]`).click();
+const command=async id=>{await page.locator(`[data-action="flight-command"][data-id="${id}"]`).click();const skip=page.locator('[data-experience="skip"]');if(await skip.count()&&await skip.isEnabled())await skip.click();};
 const overflowing=()=>page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
 const axeResults=[];
 async function audit(label){const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();axeResults.push({label,violations:result.violations.map(v=>({id:v.id,impact:v.impact,description:v.description,nodes:v.nodes.map(n=>({target:n.target,summary:n.failureSummary}))}))});}
@@ -44,7 +44,7 @@ try{
   await nav('builder');await click('launch');await command('depart');await nav('archive');await click('open-archive');assert.equal(await page.locator('.result-hero').count(),1);await nav('flight');assert.match(await page.locator('.command-panel h2').textContent(),/Translunar coast/);
   await click('abort');await click('confirm-abort');
   const chooser=page.waitForEvent('filechooser');await click('import');await(await chooser).setFiles('artifacts/test-design.json');assert.equal(await page.locator('#mission-name').inputValue(),'Hail Mary QA');
-  await nav('learn');assert.equal(await page.locator('.source-row').count(),5);await audit('manual');
+  await nav('learn');assert.equal(await page.locator('.source-row').count(),6);await audit('manual');
   for(const width of [390,768]){
     await page.setViewportSize({width,height:844});
     for(const view of ['briefing','builder','flight','archive','learn']){await nav(view);assert.equal(await overflowing(),false,`${view} overflows at ${width}`);if(width===390&&['briefing','builder'].includes(view))await page.screenshot({path:`artifacts/mobile-${view}.png`,fullPage:true});}

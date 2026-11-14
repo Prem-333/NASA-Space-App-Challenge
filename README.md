@@ -27,6 +27,10 @@ On Windows, `Start Hail Mary.cmd` starts the server and opens the game. If the d
 - Adjustable propellant, mass and budget accounting, rocket-equation delta-v, steady-state power, eclipse endurance, and science/downlink checks.
 - Five flight commands with choices that trade propellant, schedule, power and scientific return.
 - A rule-based flight director that explains the player's actual engineering margins.
+- An interactive 3D spacecraft bay: drag to rotate, inspect systems, and toggle an animated exploded view. Array size, antenna, instruments, battery and engine reflect the selected hardware.
+- A cinematic Earth-to-Moon flight view with NASA textures, moving spacecraft, engine plumes, orbital guides and three camera presets.
+- Countdown and maneuver playback with continuously updated fuel and delta-v, pause/resume, 0.5×/1×/2×/4× speed, skip, and an expanded view.
+- Exact command consequences previewed on hover or keyboard focus. Changing playback speed never changes the mission result.
 - An illustrated lunar globe using a bundled NASA SVS / LRO texture.
 - Persistent local progress, resumable flights, and the most recent 12 completed flights.
 - Design sharing by URL, JSON import/export, and downloadable Markdown flight reports.
@@ -57,13 +61,16 @@ For browser tests, start the local server in another terminal, then:
 
 ```powershell
 npm run test:e2e
+npm run test:motion
 ```
 
 The test suite uses the installed Google Chrome (`channel: 'chrome'`) and Playwright. It saves screenshots, download samples, and accessibility results in `artifacts/`. Automated accessibility testing is a useful check, not a claim of complete accessibility certification.
 
-Unit tests cover the rocket equation and its inverse, mass conservation, all starter missions in both modes, blocking checks, communication bottlenecks, deterministic outcomes, replay validation, bad inputs, and all 36 branches of the starter flight scenarios.
+42 unit tests cover the rocket equation and its inverse, mass conservation, all starter missions in both modes, blocking checks, communication bottlenecks, deterministic outcomes, replay validation, bad inputs, all 36 branches of the starter flight scenarios, and the playback clock and telemetry interpolation.
 
 Browser tests cover complete missions, objective success and failure, save/resume, design sharing, downloads, imports, archive preservation, local storage corruption, malformed share links, layouts at 390/768/1440 pixels, and operation with external requests blocked. Axe checks representative briefing, builder, flight, debrief, manual, and mobile screens.
+
+The motion suite additionally checks pause/resume, speed changes, camera presets, exploded view, keyboard rotation, full-screen controls, command previews, reloads and navigation during an animated burn, reduced-motion behavior, and the non-WebGL fallback. Commands are saved immediately; animation presents the committed result and cannot duplicate a command or lose progress.
 
 ## Structure
 
@@ -74,8 +81,13 @@ dist/                 Deploy this directory to a static host
   engine.js           Pure mission calculation and state transitions
   data.js             Mission briefs, hardware parameters, source records
   globe.js            Decorative WebGL globe, with CSS fallback
+  space-scene.js      Interactive Three.js spacecraft and flight scenes
+  experience.js       Playback controls, telemetry presentation and interactions
+  playback.js         Testable presentation clock and rocket-equation sampling
   style.css           Responsive design and accessibility styles
+  motion.css          Cinematic view, animation and reduced-motion styles
   assets/             NASA texture, original emblem and bundled fonts
+  vendor/             Bundled Three.js modules and MIT license
 tests/                Simulation and browser regression tests
 scripts/serve.mjs     Dependency-free local HTTP server
 docs/                 Submission draft, demo script, science and QA notes
@@ -85,6 +97,8 @@ docs/                 Submission draft, demo script, science and QA notes
 ## Deployment
 
 The game needs static hosting only. Publish the contents of `dist` as the site's root; `index.html` is the entry point. It works on GitHub Pages, Netlify, Cloudflare Pages, or another static host with no framework build step. Relative asset paths support subdirectory hosting. Preserve the NASA attribution and font license files in redistributed source.
+
+Three.js is bundled locally, so playing does not require npm installation or a CDN. After changing its pinned dependency, copy `three.module.js`, `three.core.js`, and `LICENSE` from `node_modules/three` into `dist/vendor`. 3D requires WebGL 2; when unavailable, a textual visualizer replaces the canvas while the game remains playable. Use a current browser with ES-module and import-map support.
 
 The Sites deployment is private by default. A private link is not sufficient for public judging; access must be intentionally changed or the portable `dist` directory deployed to a public static host before submission.
 

@@ -1,0 +1,18 @@
+import { chromium } from 'playwright';
+import {mkdir} from 'node:fs/promises';
+await mkdir('artifacts',{recursive:true});
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const page=await browser.newPage({viewport:{width:1440,height:1050}});
+page.on('pageerror',e=>console.error('PAGE:',e.message));page.on('console',m=>{if(m.type()==='error')console.error('CONSOLE:',m.text());});
+await page.goto('http://localhost:4173');
+await page.locator('button[data-action="nav"][data-view="builder"]').first().click();
+await page.waitForTimeout(1800);await page.screenshot({path:'artifacts/v2-hangar.png',fullPage:true});
+await page.locator('[data-experience="explode"]').click();await page.waitForTimeout(500);await page.screenshot({path:'artifacts/v2-exploded.png',fullPage:true});
+await page.locator('[data-action="launch"]').click();await page.waitForTimeout(1300);await page.screenshot({path:'artifacts/v2-flight-orbit.png',fullPage:true});
+await page.locator('[data-experience="camera"][data-view="follow"]').click();await page.waitForTimeout(1000);await page.screenshot({path:'artifacts/v2-flight-follow.png',fullPage:true});
+await page.locator('[data-action="flight-command"]').first().click();await page.waitForTimeout(3800);await page.locator('[data-experience="pause"]').click();await page.screenshot({path:'artifacts/v2-burn.png',fullPage:true});
+console.log('canvas count',await page.locator('canvas').count());console.log('overflow',await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth));
+await page.locator('[data-experience="skip"]').click();
+await page.setViewportSize({width:390,height:844});await page.waitForTimeout(600);await page.screenshot({path:'artifacts/v2-mobile-flight.png',fullPage:true});
+console.log('mobile overflow',await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth));
+await browser.close();
