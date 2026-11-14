@@ -53,10 +53,10 @@ try{
   await page.waitForTimeout(4100);await page.screenshot({path:'artifacts/mobile-briefing.png',fullPage:true});
   await nav('builder');await click('launch');await command('depart');await command('precision');
   assert.equal(await overflowing(),false,'Active mobile flight must fit');
-  await audit('mobile flight');await page.screenshot({path:'artifacts/mobile-flight.png',fullPage:true});
+  await audit('mobile flight');await page.waitForTimeout(4100);await page.locator('#main').focus();await page.screenshot({path:'artifacts/mobile-flight.png',fullPage:true});
   await command('repair');await command('arrive');await command('relay');
   assert.equal(await overflowing(),false,'Mobile debrief must fit');
-  await audit('mobile debrief');await page.screenshot({path:'artifacts/mobile-debrief.png',fullPage:true});
+  await audit('mobile debrief');await page.locator('#main').focus();await page.screenshot({path:'artifacts/mobile-debrief.png',fullPage:true});
   // The delivered game must have no runtime dependency on an external network.
   await page.route('**/*',route=>new URL(route.request().url()).hostname==='localhost'?route.continue():route.abort());
   await page.reload();await nav('builder');assert.equal(await page.locator('.part-card').count(),2);
