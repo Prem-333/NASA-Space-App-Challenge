@@ -32,17 +32,19 @@ On Windows, `Start Hail Mary.cmd` starts the server and opens the game. If the d
 - Countdown and maneuver playback with continuously updated fuel and delta-v, pause/resume, 0.5×/1×/2×/4× speed, skip, and an expanded view.
 - Exact command consequences previewed on hover or keyboard focus. Changing playback speed never changes the mission result.
 - An illustrated lunar globe using a bundled NASA SVS / LRO texture.
-- Persistent local progress, resumable flights, and the most recent 12 completed flights.
+- Persistent local progress, refresh-to-resume, and the most recent 12 completed flights.
+- Archived retries protect unfinished flights; malformed archive entries are ignored safely.
+- Visible science targets, impact and escape outcomes, and success/failure result screens.
 - Design sharing by URL, JSON import/export, and downloadable Markdown flight reports.
 - Keyboard access, responsive desktop/tablet/mobile layouts, reduced-motion support, and optional interface sound.
-- A Field manual explaining the calculations, sources, scoring and limitations.
+- A Manual explaining the calculations, sources, scoring and limitations.
 
 The runtime is entirely static and self-contained. Fonts and imagery are bundled. There is no analytics, external runtime request, backend, real-time NASA feed, or paid AI service. The current page remains usable without internet; offline reopening requires the local server. This is not a service-worker-installed offline app.
 
 ## A good first flight
 
 1. Choose **Hidden Water** and **Explorer**.
-2. Open **Spacecraft lab**. The starter has all six checks passing.
+2. Open **Hangar**. The starter has all six checks passing.
 3. Try lowering fuel to 500 kg and observe the failed delta-v check. Restore the starter.
 4. Enter the flight console.
 5. Choose **Commit departure burn → Correct the trajectory → Recover the solar array → Insert into polar orbit → Wait for the next contact**.
@@ -62,11 +64,13 @@ For browser tests, start the local server in another terminal, then:
 ```powershell
 npm run test:e2e
 npm run test:motion
+npm run test:outcomes
+npm run test:resilience
 ```
 
 The test suite uses the installed Google Chrome (`channel: 'chrome'`) and Playwright. It saves screenshots, download samples, and accessibility results in `artifacts/`. Automated accessibility testing is a useful check, not a claim of complete accessibility certification.
 
-53 unit tests cover the rocket equation and its inverse, mass conservation, all starter missions in both modes, blocking checks, communication bottlenecks, deterministic outcomes, replay validation, bad inputs, all 36 branches of the starter flight scenarios, and the playback clock and telemetry interpolation.
+55 unit tests cover the rocket equation and its inverse, mass conservation, all starter missions in both modes, blocking checks, communication bottlenecks, deterministic outcomes, replay validation, bad inputs, all 57 branches of the starter flight scenarios, and the playback clock and telemetry interpolation.
 
 Browser tests cover complete missions, objective success and failure, save/resume, design sharing, downloads, imports, archive preservation, local storage corruption, malformed share links, layouts at 390/768/1440 pixels, and operation with external requests blocked. Axe checks representative briefing, builder, flight, debrief, manual, and mobile screens.
 
@@ -86,6 +90,9 @@ dist/                 Deploy this directory to a static host
   playback.js         Testable presentation clock and rocket-equation sampling
   style.css           Responsive design and accessibility styles
   motion.css          Cinematic view, animation and reduced-motion styles
+  interface.css       Shared title screen, hangar and flight interface
+  flight-risk.js      Deterministic command forecasts and failure explanations
+  spacecraft.js       Procedural, independently inspectable hardware
   assets/             NASA texture, original emblem and bundled fonts
   vendor/             Bundled Three.js modules and MIT license
 tests/                Simulation and browser regression tests
@@ -104,12 +111,13 @@ The Sites deployment is private by default. A private link is not sufficient for
 
 ## Scientific scope and attribution
 
-See [SCIENCE.md](docs/SCIENCE.md) and the in-game Field manual. NASA provides the physical relationship, lunar facts, approximate transfer/capture reference, and lunar texture. **Hardware names, hardware performance values, costs, science points, event choices, and many operational assumptions are authored game parameters.**
+See [SCIENCE.md](docs/SCIENCE.md) and the in-game Manual. NASA provides the physical relationship, lunar facts, approximate transfer/capture reference, and lunar texture. **Hardware names, hardware performance values, costs, science points, event choices, and many operational assumptions are authored game parameters.**
 
 This is an educational model, not operational mission-planning software. Hail Mary is an independent project and is not endorsed by NASA. The official full challenge page was unavailable (HTTP 502) during development; the available challenge summary informed the implementation. Review the final event-specific requirements before submission.
 
 ## Submission materials
 
+- [Reviewer quickstart](docs/JUDGE-QUICKSTART.md)
 - [Submission draft](docs/SUBMISSION.md)
 - [Two-minute demo script](docs/DEMO-SCRIPT.md)
 - [Science and model notes](docs/SCIENCE.md)

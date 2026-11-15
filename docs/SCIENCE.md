@@ -10,7 +10,7 @@
 | Ideal rocket equation | Δv = Isp × g₀ × ln(m₀ / m₁) | [NASA Glenn Research Center](https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/ideal-rocket-equation/) |
 | Standard gravity conversion | g₀ = 9.80665 m/s² | Standard acceleration used to convert seconds of specific impulse into exhaust velocity; not lunar gravity |
 | Translunar injection | Approximately 3,200 m/s | [NASA NRHO architecture diagram, PDF page 6](https://www.nasa.gov/wp-content/uploads/2023/10/nrho-artemis-orbit.pdf) |
-| Global-access low lunar orbit capture | Approximately 1,350 m/s | Same NASA architecture diagram; modeled here as polar arrival |
+| Game lunar-capture allowance | 1,350 m/s | Adopted from approximate architecture references; the polar mission is an authored scenario, not a validated trajectory |
 | Lunar color map | LRO-derived 2K equirectangular texture | [NASA SVS CGI Moon Kit](https://svs.gsfc.nasa.gov/4720/), visualization by Ernie Wright |
 
 The NASA architecture values are approximate mission-design references, not universal constants. The illustrated globe maps the NASA texture onto a decorative sphere, without terrain displacement. NASA's CGI texture is optimized for visual appearance; original instrument products are required for scientific terrain work.
@@ -67,7 +67,7 @@ A failed burn yields zero. A flight can finish and earn a score while missing it
 
 The flight engine is a pure state transition over a configuration and a sequence of commands. Identical input and commands give identical results. Saved flights are reconstructed by replaying their commands; saved telemetry and score fields are not trusted. Designs are validated and normalized on import.
 
-The app uses no live NASA API. It bundles reference values, source links, and imagery. The spacecraft, fuel chart, flight path, and project emblem are original SVG/CSS work. No NASA insignia is used as a team logo.
+The app uses no live NASA API. It bundles reference values, source links, and imagery. The procedural spacecraft, schematic flight path, SVG fuel chart, and project emblem were created for this project. No NASA insignia is used as a team logo.
 
 ## Interactive visualization and playback (v1.1)
 
@@ -84,3 +84,7 @@ A command is committed and saved exactly once when selected. The animation then 
 ## Scripted failure scenarios (1.3)
 
 Ignoring navigation is an authored lost-encounter scenario. Disabling arrival guidance causes escape for the orbiter and impact for a surface-intercept trajectory. These are deterministic gameplay branches, not numerically integrated flight dynamics or real spacecraft failure probabilities. The impact flash and debris are illustrative vacuum-impact effects. Normal arrival and science-result rules remain unchanged. Older saved command sequences retain their outcomes.
+
+## Source audit — 15 November 2026
+
+All six in-game NASA reference URLs were reachable during the audit. The architecture presentation title was corrected to “How: NRHO — The Artemis Orbit.” The distinction between reference transfer costs and the authored polar-mission scenario is explicit. The official full challenge page still returned HTTP 502; event-specific submission requirements remain to be verified by the team.

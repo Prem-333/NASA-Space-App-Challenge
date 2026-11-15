@@ -124,3 +124,17 @@ for(const [mission,commands,outcome] of [
  assert.deepEqual(restoreFlight({...f,outcome:'success',name:'Hail Mary I'}),{...f,name:'Hail Mary I'});
  assert.strictEqual(advanceFlight(f,'arrive'),f);
 });
+
+test('a missed objective never receives a success grade',()=>{
+ const f=run('lander','explorer',['depart','economy','shed','arrive','priority']);
+ assert.equal(summarize(f).grade,'Objective missed');
+ assert.equal(summarize(createFlight(DEFAULT_DESIGNS.orbiter,'orbiter')).grade,'In progress');
+});
+
+test('array fault is reflected in telemetry before the recovery choice',()=>{
+ let f=createFlight(DEFAULT_DESIGNS.orbiter,'orbiter');
+ for(const id of ['depart','precision'])f=advanceFlight(f,id);
+ assert.equal(f.generationFactor,.65);assert.equal(f.scienceFactor,1);
+ assert.equal(advanceFlight(f,'repair').generationFactor,1);
+ assert.equal(advanceFlight(f,'shed').generationFactor,.65);
+});

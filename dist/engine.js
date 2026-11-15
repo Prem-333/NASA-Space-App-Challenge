@@ -94,7 +94,7 @@ export function advanceFlight(f,choiceId) {
   const failureReason=outcome==='impact'?'Guidance was disabled on a surface-intercept trajectory. The spacecraft struck the Moon.':choice.failure==='escape'?'The required trajectory maneuver was skipped. The spacecraft left the lunar mission corridor.':fuelFailure?'The required burn exceeded the remaining propellant. The target trajectory could not be reached.':null;
   let scienceFactor=f.scienceFactor*choice.science;
   if(f.step===2 && choice.generation) scienceFactor*=Math.min(1,c.generation*choice.generation/c.draw);
-  const next={...f,fuel:failed?f.fuel:Math.max(0,f.fuel-fuelCost),scienceFactor,generationFactor:choice.generation??f.generationFactor,extraHours:f.extraHours+(choice.hours||0),step:failed?f.step: f.step+1,failed,outcome,failureReason,complete:failed||f.step===4,
+  const next={...f,fuel:failed?f.fuel:Math.max(0,f.fuel-fuelCost),scienceFactor,generationFactor:choice.generation??(!failed&&f.step===1?(c.power.id==='redundant'?.85:.65):f.generationFactor),extraHours:f.extraHours+(choice.hours||0),step:failed?f.step: f.step+1,failed,outcome,failureReason,complete:failed||f.step===4,
     decisions:[...f.decisions,choiceId],log:[...f.log,{stage:FLIGHT_STAGES[f.step].name,command:choice.title,dv:choice.dv,fuel:failed?0:fuelCost,result:failed?failureReason:choice.detail}]};
   next.history=[...f.history,{stage:FLIGHT_STAGES[f.step].short,fuel:next.fuel,science:f.step===4&&!failed?c.science*scienceFactor:0}];
   return next;
@@ -107,7 +107,7 @@ export function summarize(f) {
   const efficiency=clamp((1-c.cost/c.budget)*50+10,0,20);
   const resilience=clamp(remainingDv(f)/300*15,0,15);
   const score=f.failed?0:Math.round(scienceScore+efficiency+resilience);
-  return {science,objectiveMet,score,grade:score>=90?'Exceptional':score>=75?'Mission accomplished':score>=55?'Promising flight':'Lessons learned',cost:c.cost,reserve:remainingDv(f),duration:c.mission.days*24+f.extraHours};
+  return {science,objectiveMet,score,grade:f.failed?'Mission failed':f.complete&&!objectiveMet?'Objective missed':!f.complete?'In progress':score>=90?'Exceptional':score>=75?'Mission accomplished':score>=55?'Promising flight':'Lessons learned',cost:c.cost,reserve:remainingDv(f),duration:c.mission.days*24+f.extraHours};
 }
 export function restoreFlight(raw) {
   if(!raw || raw.version!==VERSION || !MISSIONS.some(m=>m.id===raw.missionId) || !['explorer','commander'].includes(raw.mode) || !Array.isArray(raw.decisions) || raw.decisions.length>5) return null;

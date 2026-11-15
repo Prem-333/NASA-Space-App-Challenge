@@ -1,12 +1,12 @@
 # Validation record
 
-Date: 14 November 2026. Environment: Windows, Node.js 24, installed Google Chrome driven by Playwright.
+Date: 15 November 2026. Environment: Windows, Node.js 24, installed Google Chrome driven by Playwright.
 
 ## Recorded results
 
 | Check | Result |
 |---|---|
-| Simulation, playback and spacecraft tests | **53 passed, 0 failed** |
+| Simulation, playback and spacecraft tests | **55 passed, 0 failed** |
 | Flight scenario branches | All **57** starter branches traversed; nonnegative fuel and bounded finite scores |
 | Starter missions | All three pass preflight and complete the conservative plan in both difficulty modes |
 | Browser end-to-end suite | **Passed** |
@@ -14,7 +14,7 @@ Date: 14 November 2026. Environment: Windows, Node.js 24, installed Google Chrom
 | Browser page/console errors | **0** during final suite |
 | Failed runtime requests | **0** during final suite |
 | Automated accessibility | **0 reported violations** across 10 regression screen states and 3 additional motion states |
-| Responsive overflow | None at 390, 768 and 1440 px in tested views; active flight and debrief also checked at 390 px |
+| Responsive overflow | None at 320, 390, 768, 1024 and 1440 px in tested views; active flight and debrief also checked at 390 px |
 | Network independence | Game loaded and worked with all non-local requests blocked |
 | Runtime security boundary | No keys, external model calls, tracking, or server-side user database |
 
@@ -77,6 +77,19 @@ The browser test regenerates `artifacts/accessibility.json`, screenshots, and sa
 
 ## Flight outcomes (1.3)
 
-- 53 unit tests, covering 57 reachable starter branches.
+- 55 unit tests, covering 57 reachable starter branches.
 - Impact and escape terminate the mission and survive saved-state reconstruction.
 - Browser coverage: animated impact, trajectory loss, successful touchdown, retry, keyboard commands, mobile layout, reduced motion and result-screen accessibility.
+
+## Final hackathon audit (1.5)
+
+- 55 unit tests passed; all 57 starter command branches checked.
+- Full browser suite passed: 10 audited screen states, zero reported accessibility violations, zero page/console errors and zero failed runtime requests.
+- Motion suite passed: 3 audited states, plus reduced motion and WebGL fallback. Fallback page errors are now explicitly collected.
+- Outcome suite passed: impact, escape, touchdown, retry, keyboard, reload, mobile and result accessibility.
+- Resilience suite passed: archive retry preserves unfinished flights until explicitly replaced; refresh resumes the committed state; malformed archive entries are ignored; storage failure is reported; all fallback hangar controls work. Five viewport widths passed overflow checks.
+- Fault telemetry was verified at 624 W for the default orbiter before recovery (960 W nominal); the science plan stays intact until a response is chosen.
+- NASA source URLs were checked on 15 November 2026. All six opened. The official full challenge page returned HTTP 502.
+- Submission and demo text were updated. Public demo access, team contributions, source publication and event-specific submission remain team handoff items.
+
+Automated and sampled visual checks do not prove that all devices or every possible interaction are bug-free. No claim of a hackathon result or judging outcome is made.

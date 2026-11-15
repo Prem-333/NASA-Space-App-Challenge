@@ -21,6 +21,7 @@ export function flightWarning(f) {
 }
 export function failureExplanation(f) {
   const s=summarize(f),c=calculate(f.design,f.missionId,f.mode);
+  if(f.failed&&f.failureReason?.includes('remaining propellant'))return f.failureReason+' Add propellant, reduce dry mass, or preserve more delta-v before trying again.';
   if(f.failed&&f.failureReason)return f.failureReason+' Retry with navigation corrections and arrival guidance enabled.';
   if(f.failed)return 'The requested burn exceeded the remaining propellant. Add fuel, reduce spacecraft mass, or reserve more delta-v for arrival before trying again.';
   return `Returned ${s.science.toFixed(1)} of ${c.mission.minScience} required science points — ${(c.mission.minScience-s.science).toFixed(1)} short. Coverage, available power, and downlink choices determine this result. Review the command log and try preserving more science on the next flight.`;

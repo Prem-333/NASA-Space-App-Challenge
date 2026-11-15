@@ -3,7 +3,7 @@
 **Challenge:** Space Mission Design Game  
 **Team:** Hail Mary  
 **Project title:** Hail Mary — Mission Control  
-**Tagline:** Build a spacecraft. Make the hard calls. Bring the science home.
+**Tagline:** Configure a lunar spacecraft. Check its margins. Command the flight.
 
 ## Short summary
 
@@ -17,15 +17,15 @@ Space mission design combines many competing demands. A more capable instrument 
 
 We built a complete browser game around three robotic lunar missions: a flyby, a polar orbiter, and a lander. Players select systems and instruments, adjust propellant, and receive immediate engineering feedback. Six preflight checks connect choices to velocity capability, launch capacity, cost, daylight power, eclipse endurance and the scientific objective.
 
-After launch, the player commands five phases. Trajectory correction, a solar-array fault, lunar arrival and a disrupted ground contact create trade-offs between fuel, schedule, electrical capacity and scientific return. A transparent flight director explains the actual margins. The final report traces fuel consumption, compares science with the objective, and connects outcomes to individual decisions.
+After launch, the player commands up to five phases. Trajectory correction, a solar-array fault, lunar arrival and a disrupted ground contact create trade-offs between fuel, schedule, electrical capacity and scientific return. A transparent flight director explains the actual margins. Ignoring navigation or disabling arrival guidance produces an explicit mission loss, shown as escape or a surface impact. These are authored scenarios, rather than a numerical flight-dynamics simulation. A completed mission receives a success or failure screen with retry and design refinement. The final report traces fuel consumption, compares science with the objective, and connects outcomes to individual decisions.
 
 ## How NASA data and resources are used
 
 - NASA Glenn's ideal rocket equation powers the builder and sequential propellant calculations.
 - NASA's Moon Fact Sheet supplies physical facts and the Earth–Moon distance shown in the experience.
 - A NASA lunar-orbit architecture diagram informs approximate translunar and polar-capture delta-v budgets.
-- NASA SVS's LRO-derived lunar texture is rendered as a globe in the mission desk.
-- Every source and simulation assumption is disclosed in the Field manual.
+- NASA SVS's LRO-derived lunar texture and Blue Marble Earth mosaic appear in the 3D mission views.
+- Every source and simulation assumption is disclosed in the Manual.
 
 Hardware performance values, prices, events, science scores and several operational allowances are authored game parameters. We make this boundary visible instead of presenting game parameters as NASA measurements.
 
@@ -41,7 +41,7 @@ HTML, CSS and modular JavaScript; a pure calculation/state-transition engine; lo
 
 ## Validation
 
-42 automated simulation and playback tests cover physical relationships, constraints, both difficulty modes, input validation, replay integrity, all 36 branches of starter scenarios, and animation timing/telemetry. Browser tests exercise all three missions, successful and missed objectives, save/resume, file import/export, share links, archive preservation, mobile/tablet layouts, and operation with external network requests blocked. Additional motion tests verify pause, speed, camera selection, reduced motion, WebGL fallback and reloads during maneuvers. See QA.md for the final recorded results and limitations.
+55 unit tests cover physical relationships, constraints, both difficulty modes, state replay, spacecraft assemblies, risk forecasts, and animation telemetry. All 57 reachable starter branches are traversed. Browser suites cover the three missions, impact and escape, missed science objectives, retry, saving, share links, imports/exports, and 320–1440 px layouts. The release audit also tests corrupted records, unavailable storage, refresh-to-resume, and protection against replacing an unfinished flight from the archive. Accessibility checks use axe-core; this is automated coverage, not a claim of complete accessibility certification. See QA.md for results and limits.
 
 ## Honest limitations
 

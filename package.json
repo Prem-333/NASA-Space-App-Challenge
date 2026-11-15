@@ -1,6 +1,6 @@
 {
   "name": "hail-mary-mission-control",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
   "description": "A transparent, NASA-informed lunar mission design game.",
@@ -11,7 +11,8 @@
     "test:e2e": "node tests/browser.mjs",
     "test:motion": "node tests/motion-browser.mjs",
     "check": "node --check dist/app.js && node --check dist/engine.js && node --check dist/data.js && node --check dist/space-scene.js && node --check dist/experience.js && node --check dist/playback.js && node --check dist/spacecraft.js && node --check dist/flight-risk.js",
-    "test:outcomes": "node tests/outcomes-browser.mjs"
+    "test:outcomes": "node tests/outcomes-browser.mjs",
+    "test:resilience": "node tests/resilience-browser.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

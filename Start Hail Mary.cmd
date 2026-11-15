@@ -7,6 +7,5 @@ if errorlevel 1 (
   exit /b 1
 )
 if not defined PORT set PORT=4173
-start "" "http://localhost:%PORT%"
-node scripts\serve.mjs
+node scripts\serve.mjs --open
 pause

@@ -90,3 +90,6 @@ body.flight-game main{padding:18px 24px 32px}.flight-game .flight-progress{borde
 @media(max-width:900px){.builder-main,.equipment-column{display:contents}.craft-panel{order:0}.parts-panel{order:1}.fuel-panel{order:2}.preflight{order:3}}
 
 body .nav-item>span,body.flight-game .nav-item>span{font-size:inherit;line-height:1.3}
+
+.science-target{display:flex;flex-direction:column;gap:3px;padding-left:20px;border-left:1px solid #526052}.science-target small{font-size:9px;color:#d1dfce;letter-spacing:.1em}.science-target strong{font:500 26px var(--display);color:#e9f3e6}.science-target em{font:400 15px var(--body);color:#bbcbb6}.science-target>span{font-size:10px;color:#b9c6b4;max-width:190px}.saved-indicator{max-width:42%;text-align:right}
+@media(max-width:760px){.science-target{padding-left:0;border:0}.science-target strong{font-size:25px}}
