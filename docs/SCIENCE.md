@@ -111,3 +111,7 @@ Director framing, field-of-view changes, exhaust appearance, attitude-control pu
 ## 3D descent presentation (v1.8)
 
 The 3D descent renderer uses physics-frame metres for position and the selected craft design. Its spacecraft geometry is an illustrative model. Steering directly sets the displayed tilt; no rotational dynamics have been added. The landing zone has a 35 m radius, intersecting the one-dimensional ground track at the existing ±35 m boundaries. Procedural crater relief stays outside the flat flight corridor; rocks, beacons, surface dust and sunlight are visual only. Chase and Approach views never alter controls or results. The 2D display is retained as a fallback when WebGL cannot initialize.
+
+## Impact presentation (v1.9)
+
+The contact flash, spacecraft breakup, and ejecta are illustrative. Debris trajectories use an authored lunar-gravity parabola and stop at the ground; they are not a structural failure calculation. Surface dust has no rising smoke column or atmospheric shockwave. Manual impact visuals follow the already determined physics result and never change recorded controls, propellant or score.

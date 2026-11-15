@@ -1,6 +1,6 @@
 {
   "name": "hail-mary-mission-control",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "private": true,
   "type": "module",
   "description": "A transparent, NASA-informed lunar mission design game.",
@@ -10,12 +10,13 @@
     "test": "node --test tests/engine.test.mjs tests/playback.test.mjs tests/spacecraft.test.mjs tests/flight-risk.test.mjs tests/science-descent.test.mjs tests/cinematography.test.mjs",
     "test:e2e": "node tests/browser.mjs",
     "test:motion": "node tests/motion-browser.mjs",
-    "check": "node --check dist/app.js && node --check dist/engine.js && node --check dist/data.js && node --check dist/space-scene.js && node --check dist/experience.js && node --check dist/playback.js && node --check dist/spacecraft.js && node --check dist/flight-risk.js && node --check dist/science.js && node --check dist/science-ui.js && node --check dist/descent.js && node --check dist/descent-ui.js && node --check dist/cinematography.js && node --check dist/scene-effects.js && node --check dist/descent-renderer.js && node --check dist/globe.js && node --check dist/craft-textures.js && node --check dist/descent-fallback.js",
+    "check": "node --check dist/app.js && node --check dist/engine.js && node --check dist/data.js && node --check dist/space-scene.js && node --check dist/experience.js && node --check dist/playback.js && node --check dist/spacecraft.js && node --check dist/flight-risk.js && node --check dist/science.js && node --check dist/science-ui.js && node --check dist/descent.js && node --check dist/descent-ui.js && node --check dist/cinematography.js && node --check dist/scene-effects.js && node --check dist/descent-renderer.js && node --check dist/globe.js && node --check dist/craft-textures.js && node --check dist/descent-fallback.js && node --check dist/impact-effects.js",
     "test:outcomes": "node tests/outcomes-browser.mjs",
     "test:resilience": "node tests/resilience-browser.mjs",
     "test:science": "node tests/science-browser.mjs",
     "test:cinematic": "node tests/cinematic-browser.mjs",
-    "test:descent-visual": "node tests/descent-visual-browser.mjs"
+    "test:descent-visual": "node tests/descent-visual-browser.mjs",
+    "test:impact": "node tests/impact-browser.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

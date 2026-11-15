@@ -1,3 +1,4 @@
+import { createImpact } from './impact-effects.js';
 import { solarTexture,foilTexture } from './craft-textures.js';
 import * as T from 'three';
 import { createCraft } from './spacecraft.js';
@@ -43,13 +44,7 @@ export function createSpaceScene(host,{kind='flight',design,missionId='orbiter',
     const deck=new T.Mesh(new T.CylinderGeometry(4.15,4.15,.06,96),new T.MeshStandardMaterial({color:'#182126',roughness:.7,metalness:.3}));deck.position.y=-2.34;scene.add(deck);
     const grid=new T.GridHelper(14,28,'#3a6159','#203532');grid.position.y=-2.3;grid.material.transparent=true;grid.material.opacity=.5;scene.add(grid);orbit(new T.Vector3(0,-2.28,0),3.8,'#b8d89b');orbit(new T.Vector3(0,-2.28,0),4,'#4d6b5c');
   }
-  const wreck=new T.Group();scene.add(wreck);wreck.visible=false;
-  const debris=[];
-  for(let i=0;i<36;i++){
-    const rock=new T.Mesh(new T.TetrahedronGeometry(.035+(i%4)*.018),new T.MeshStandardMaterial({color:i%3?'#77736d':'#ab8a4c',roughness:.85}));
-    wreck.add(rock);debris.push(rock);
-  }
-  const flash=new T.Mesh(new T.SphereGeometry(1,24,16),new T.MeshBasicMaterial({color:'#ffbd68',transparent:true,opacity:.7,depthWrite:false}));wreck.add(flash);
+  const impactEffect=createImpact(craft),wreck=impactEffect.group;wreck.scale.setScalar(.35);scene.add(wreck);
   const failureTrail=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]),new T.LineBasicMaterial({color:'#ef8b73'}));scene.add(failureTrail);failureTrail.visible=false;
   let disposed=false,visible=true,paused=false,view=kind==='hangar'?'inspection':'cinematic',exploded=false,angle=.48,elevation=.4,zoom=1,rotation=0,auto=motion,time=0,previous=0,frame=0,selected=null,cameraReady=false,cameraDirty=true,slowFrames=0,qualityFrames=0,frameTotal=0;
   let sample={route:ROUTE_STEPS[step],progress:0,burning:false};const target=new T.Vector3(),desired=new T.Vector3(),look=new T.Vector3(),attitude=new T.Quaternion();let desiredFov=42;if(initialCamera){camera.position.fromArray(initialCamera.position);look.fromArray(initialCamera.look);if(curve&&initialCamera.anchor){const shift=curve.getPoint(ROUTE_STEPS[step]).sub(new T.Vector3(...initialCamera.anchor));camera.position.add(shift);look.add(shift);}camera.fov=initialCamera.fov;cameraReady=true;}const raycaster=new T.Raycaster();
@@ -94,7 +89,7 @@ export function createSpaceScene(host,{kind='flight',design,missionId='orbiter',
       craft.group.visible=true;wreck.visible=false;failureTrail.visible=!!sample.outcome;
       if(sample.outcome){
         const p=T.MathUtils.clamp(sample.eventProgress??1,0,1),origin=curve.getPoint(sample.originRoute??sample.route);
-        const impact=sample.outcome==='impact',endpoint=impact?new T.Vector3(13,2.15,0):new T.Vector3(27,12,-5);
+        const impact=sample.outcome==='impact',endpoint=impact?new T.Vector3(13,2.22,0):new T.Vector3(27,12,-5);
         const travel=impact?Math.min(1,p/.65):p;
         craft.group.position.copy(origin).lerp(endpoint,travel);
         attitude.setFromUnitVectors(new T.Vector3(0,1,0),endpoint.clone().sub(origin).normalize());if(!impact&&motion)attitude.multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),p*1.8));
@@ -103,8 +98,8 @@ export function createSpaceScene(host,{kind='flight',design,missionId='orbiter',
         if(impact&&p>=.65){
           craft.group.visible=false;wreck.visible=true;wreck.position.copy(endpoint);
           const burst=(p-.65)/.35;
-          flash.scale.setScalar(.08+Math.sqrt(burst)*.8);flash.material.opacity=Math.max(0,1-burst*4)*.65;
-          debris.forEach((d,i)=>{const a=i*2.39996,r=(.1+burst*1.4)*(1+(i%5)*.12);d.position.set(Math.cos(a)*r,Math.max(.035,burst*(1.4+(i%7)*.16)-burst*burst*1.35),Math.sin(a)*r);d.rotation.set(i+burst*2,i*.7,burst*3);});
+          impactEffect.update(burst,{motion});host.dataset.impactPhase=wreck.userData.phase;
+
         }
       }
       if(!cameraReady||!motion)craft.group.quaternion.copy(attitude);else if(!paused)craft.group.quaternion.slerp(attitude,damping(dt,7));
@@ -112,6 +107,7 @@ export function createSpaceScene(host,{kind='flight',design,missionId='orbiter',
         const framing=shot({stage:step,progress:sample.active?sample.progress:0,time,burning:sample.burning,outcome:sample.outcome,aspect:camera.aspect,motion});
         const center=sample.outcome==='impact'?new T.Vector3(13,2.3,0):craft.group.position;target.copy(center).addScaledVector(tangent,framing.lead);
         desired.copy(center).add(new T.Vector3(Math.sin(framing.azimuth)*framing.distance*zoom,framing.height,Math.cos(framing.azimuth)*framing.distance*zoom));
+        if(sample.outcome==='impact'&&motion){const age=Math.max(0,((sample.eventProgress??1)-.65)/.35)*5,kick=age>0?Math.exp(-age*5)*.09:0;desired.x+=Math.sin(age*47)*kick;desired.y+=Math.cos(age*39)*kick;}
         desired.x+=Math.sin(time*19)*framing.impulse;desired.y+=Math.cos(time*23)*framing.impulse;desiredFov=framing.fov;craft.group.scale.setScalar(.35);
       }else if(view==='follow'){target.copy(craft.group.position);desired.copy(target).add(new T.Vector3(Math.sin(angle)*4.8*zoom,2.1+elevation*2,Math.cos(angle)*4.8*zoom));craft.group.scale.setScalar(.35);}
       else if(view==='moon'){target.copy(moonPosition);desired.copy(target).add(new T.Vector3(Math.sin(angle)*10*zoom,3+elevation*6,Math.cos(angle)*10*zoom));craft.group.scale.setScalar(.35);}
@@ -131,7 +127,7 @@ export function createSpaceScene(host,{kind='flight',design,missionId='orbiter',
     setExploded(value){exploded=value;if(value)auto=false;},setRotation(value){cameraDirty=true;auto=false;rotation=value*Math.PI/180;},setAuto(value){auto=value;},setZoom(value){zoom=T.MathUtils.clamp(value,.55,1.7);},
     reset(){cameraDirty=true;exploded=false;angle=.48;elevation=.4;zoom=1;rotation=0;auto=motion;},
     selectSystem(id){selected=id;for(const m of craft.pickables){if(m.material.emissive){m.material.emissive.set(m.userData.category===selected?'#64725c':'#000000');m.material.emissiveIntensity=m.userData.category===selected?.15:0;}}},
-    dispose(){environment.dispose();shadow?.map.dispose();annotations.forEach(a=>a.label.remove());Object.values(craft.materials).forEach(m=>m.dispose());disposed=true;cancelAnimationFrame(frame);observer.disconnect();intersection.disconnect();host.removeEventListener('pointerdown',down);host.removeEventListener('pointermove',move);host.removeEventListener('pointerup',up);host.removeEventListener('pointercancel',up);host.removeEventListener('keydown',key);scene.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();}});renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
+    dispose(){impactEffect.dispose();environment.dispose();shadow?.map.dispose();annotations.forEach(a=>a.label.remove());Object.values(craft.materials).forEach(m=>m.dispose());disposed=true;cancelAnimationFrame(frame);observer.disconnect();intersection.disconnect();host.removeEventListener('pointerdown',down);host.removeEventListener('pointermove',move);host.removeEventListener('pointerup',up);host.removeEventListener('pointercancel',up);host.removeEventListener('keydown',key);scene.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();}});renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();}
   };return api;
 }
 

@@ -1,3 +1,4 @@
+import { createImpact } from './impact-effects.js';
 import * as T from 'three';
 import { createCraft } from './spacecraft.js';
 import { solarTexture,foilTexture } from './craft-textures.js';
@@ -17,7 +18,7 @@ export function createDescentRenderer(canvas,{design,marker}={}){
   const sun=new T.DirectionalLight('#fff9f2',3.3);sun.position.set(-160,240,120);sun.castShadow=true;
   sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-240,right:240,top:240,bottom:-240,near:1,far:1000});sun.shadow.bias=-.0002;sun.shadow.normalBias=.08;
   scene.add(sun,sun.target,new T.HemisphereLight('#b3c2d8','#35302a',.5));
-  const craft=createCraft(design,'lander',solarTexture(),foilTexture());craft.group.scale.setScalar(1.8);scene.add(craft.group);
+  const craft=createCraft(design,'lander',solarTexture(),foilTexture());craft.group.scale.setScalar(1.8);scene.add(craft.group);const impact=createImpact(craft);impact.group.scale.setScalar(1.8);scene.add(impact.group);
   craft.group.traverse(o=>{if(o.isMesh&&!o.material.transparent){o.castShadow=true;o.receiveShadow=true;}});
   let seed=731;const rand=()=>((seed=seed*16807%2147483647)/2147483647);
   const groundCanvas=document.createElement('canvas');groundCanvas.width=groundCanvas.height=512;
@@ -39,19 +40,21 @@ export function createDescentRenderer(canvas,{design,marker}={}){
   // Ballistic dust spreads low across the surface; there is no atmosphere.
   const dustPositions=new Float32Array(180*3),dust=new T.Points(new T.BufferGeometry(),new T.PointsMaterial({color:'#b8afa0',size:.28,transparent:true,opacity:0,depthWrite:false}));dust.geometry.setAttribute('position',new T.BufferAttribute(dustPositions,3));scene.add(dust);
   let view='chase',ready=false,last=null,disposed=false,width=0,height=0;
-  function draw(s,{throttle=0,steer=0,paused=true,dt=0,time=s.time,motion=true}={}){
-    if(disposed)return;last={s,options:{throttle,steer,paused,dt:0,time,motion}};
+  function draw(s,{throttle=0,steer=0,paused=true,dt=0,time=s.time,motion=true,impactProgress=null}={}){
+    if(disposed)return;last={s,options:{throttle,steer,paused,dt:0,time,motion,impactProgress}};
     const w=Math.max(1,canvas.clientWidth),h=Math.max(1,canvas.clientHeight);if(w!==width||h!==height){width=w;height=h;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
     craft.group.position.set(s.x,s.y+2.79,0);craft.group.rotation.z=-steer*.45;craft.updatePlume(time,s.fuel>0?throttle:0);
     const near=1-T.MathUtils.smoothstep(s.y,6,65),portrait=Math.max(1,1.5/camera.aspect);
     if(view==='approach'){aim.set(s.x*.48,Math.max(4,s.y*.48),0);const d=Math.max(90,s.y*1.65,Math.abs(s.x)*1.5)*portrait;eye.set(aim.x+d*.15,aim.y+d*.32,d);}
     else{aim.set(s.x,Math.max(2.5,s.y+1.5),0);eye.set(s.x+13*portrait,s.y+12+near*5,25*portrait);}
+    if(impactProgress!==null){eye.z+=impactProgress*7;eye.y+=impactProgress*3;}
     const blend=(!ready||paused||!motion)?1:1-Math.exp(-Math.min(dt,.1)*5);camera.position.lerp(eye,blend);look.lerp(aim,blend);camera.lookAt(look);camera.updateMatrixWorld();ready=true;
     const strength=s.fuel>0?throttle*Math.max(0,1-s.y/28):0;dust.material.opacity=strength*.48;
     for(let i=0;i<180;i++){const a=i*2.39996,t=(time*.55+i/180)%1,r=2+t*26;dustPositions[i*3]=s.x+Math.cos(a)*r;dustPositions[i*3+1]=.1+Math.sin(t*Math.PI)*Math.min(2,r*.1);dustPositions[i*3+2]=Math.sin(a)*r;}dust.geometry.attributes.position.needsUpdate=true;
     if(marker){const target=new T.Vector3(0,1,0).project(camera),px=(target.x*.5+.5)*width,py=(-target.y*.5+.5)*height;marker.style.left=`${T.MathUtils.clamp(px,90,width-90)}px`;marker.style.top=`${T.MathUtils.clamp(py,38,height-38)}px`;marker.textContent=`LANDING ZONE · ${Math.abs(s.x).toFixed(0)} m ${s.x<0?'RIGHT':'LEFT'}`;}
+    if(impactProgress!==null&&s.status==='impact'){craft.group.visible=false;dust.visible=false;impact.group.position.set(s.x,.03,0);impact.update(impactProgress,{motion});canvas.dataset.impactPhase=impact.group.userData.phase;}
     canvas.dataset.camera=view;renderer.render(scene,camera);
   }
   const resize=new ResizeObserver(()=>{if(last)draw(last.s,last.options);});resize.observe(canvas);
-  return {draw,setView(value){view=value==='approach'?'approach':'chase';ready=false;if(last)draw(last.s,last.options);},dispose(){disposed=true;resize.disconnect();const geometries=new Set(),materials=new Set();scene.traverse(o=>{if(o.geometry)geometries.add(o.geometry);if(o.material)for(const m of Array.isArray(o.material)?o.material:[o.material])materials.add(m);});geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());regolith.dispose();sun.shadow.map?.dispose();renderer.dispose();renderer.forceContextLoss();}};
+  return {draw,setView(value){view=value==='approach'?'approach':'chase';ready=false;if(last)draw(last.s,last.options);},dispose(){impact.dispose();disposed=true;resize.disconnect();const geometries=new Set(),materials=new Set();scene.traverse(o=>{if(o.geometry)geometries.add(o.geometry);if(o.material)for(const m of Array.isArray(o.material)?o.material:[o.material])materials.add(m);});geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());regolith.dispose();sun.shadow.map?.dispose();renderer.dispose();renderer.forceContextLoss();}};
 }

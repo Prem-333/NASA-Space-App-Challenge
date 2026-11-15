@@ -23,6 +23,6 @@ try{
  await page.locator('[data-action="select-mission"][data-id="lander"]').click();await nav('builder');await page.locator('[data-action="launch"]').click();for(const id of ['depart','precision','repair'])await command(id);
  await page.locator('[data-action="manual-descent"]').click();await caption('Pilot the final 180 metres: a detailed 3D lander, tracking camera, and live thrust and velocity.',4500);
  await page.locator('#descent-throttle').fill('0');await page.locator('#descent-throttle').dispatchEvent('input');await page.locator('#descent-pause').click();await caption('This attempt cuts the engine. Lunar gravity keeps accelerating the lander toward the surface.',8500);
- await page.locator('[data-experience="skip"]').click();await page.locator('.game-result').scrollIntoViewIfNeeded();await caption('Impact. The result is calculated from the controls and saved for review—not guaranteed success.',4500);
+ await page.locator('.game-result').waitFor({timeout:20000});await page.locator('.game-result').scrollIntoViewIfNeeded();await caption('Impact. The result is calculated from the controls and saved for review—not guaranteed success.',4500);
  await page.locator('[data-action="about"]').click();await caption('Team Hail Mary · Source code, NASA references, and model limits are included.',4000);
 }finally{const video=page.video();await context.close();await copyFile(await video.path(),'artifacts/hail-mary-walkthrough.webm');await browser.close();}

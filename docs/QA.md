@@ -110,3 +110,7 @@ Automated and sampled visual checks do not prove that all devices or every possi
 ## v1.8 3D descent
 
 `npm run test:descent-visual` verifies the 3D renderer, both camera modes, exact pause freeze, narrow layouts, near-ground framing, and a playable 2D fallback when WebGL is unavailable. `npm run test:science` verifies both piloted mission outcomes and accessible descent controls. Existing cinematic tests cover the shared spacecraft textures after extraction.
+
+## v1.9 impact presentation
+
+`npm run test:impact` verifies the full-motion manual crash, frozen breakup frame, settled wreckage, pause/resume, skip to result, 390 px layout, accessibility and authoritative result after reload. The science suite checks reduced-motion impacts and safe touchdown. The outcome suite checks assisted crash, escape and success.
