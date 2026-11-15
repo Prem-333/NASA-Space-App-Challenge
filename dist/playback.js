@@ -13,8 +13,8 @@ export const ROUTE_STEPS=[0,.25,.51,.77,1,1];
 export function sampleManeuver(before,after,progress){
   const p=clamp(progress,0,1),c=calculate(before.design,before.missionId,before.mode);
   const log=after.log.at(-1);
-  const burn=after.failed?0:(log?.dv||0)*p;
-  const fuel=after.failed?before.fuel:Math.max(0,(c.dry+before.fuel)*Math.exp(-burn/(c.engine.isp*9.80665))-c.dry);
+  const burn=after.failed&&!after.descentResult?0:(log?.dv||0)*p;
+  const fuel=after.failed&&!after.descentResult?before.fuel:Math.max(0,(c.dry+before.fuel)*Math.exp(-burn/(c.engine.isp*9.80665))-c.dry);
   return {progress:p,outcome:after.outcome||null,eventProgress:p,originRoute:ROUTE_STEPS[before.step],fuel:p===1?after.fuel:fuel,dv:deltaV(c.dry+fuel,c.dry,c.engine.isp),
     power:c.generation*(before.generationFactor+(after.generationFactor-before.generationFactor)*p),
     science:before.scienceFactor+(after.scienceFactor-before.scienceFactor)*p,

@@ -93,3 +93,11 @@ The browser test regenerates `artifacts/accessibility.json`, screenshots, and sa
 - Submission and demo text were updated. Public demo access, team contributions, source publication and event-specific submission remain team handoff items.
 
 Automated and sampled visual checks do not prove that all devices or every possible interaction are bug-free. No claim of a hackathon result or judging outcome is made.
+
+
+## v1.6 gap-closure verification
+
+- 64 unit tests pass. Existing 57 discrete starter branches remain covered; manual controls add a continuous input space tested by representative safe, impact, corridor-exit, zero-fuel, malformed-input and replay cases.
+- New science browser suite: all three unlocks, mismatch rejection and persistence, per-objective products, mission comparisons, manual pause/reload, calculated impact, successful resumed descent, 320–1440 px descent layouts, and four additional axe states.
+- Existing functional (10 axe states), motion (3), outcome (1), and resilience suites retained.
+- No claim of exhaustive physical validation or complete accessibility certification. See SCIENCE.md for integration assumptions and limits.

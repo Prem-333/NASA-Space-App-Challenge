@@ -16,7 +16,7 @@ try{
  for(const id of ['depart','precision','repair'])await command(id);
  await page.locator('[data-action="flight-command"][data-id="skip-arrival"]').click();
  await page.locator('[data-experience="speed"]').click();await page.locator('[data-experience="speed"]').click();
- await page.waitForTimeout(1900);await page.locator('[data-experience="pause"]').click();
+ await page.waitForFunction(()=>{const n=Number(document.querySelector('#maneuver-percent')?.textContent.replace('%',''));if(n>=70&&n<100){document.querySelector('[data-experience="pause"]').click();return true;}return false;});
  assert.match(await page.locator('#scene-caption').textContent(),/Impact confirmed/);
  await page.locator('#flight-cinema').screenshot({path:'artifacts/game-impact.png'});
  await page.locator('[data-experience="skip"]').click();

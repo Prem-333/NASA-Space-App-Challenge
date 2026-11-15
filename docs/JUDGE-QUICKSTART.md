@@ -1,34 +1,24 @@
 # Hail Mary — reviewer quickstart
 
-**Challenge:** Space Mission Design Game  
-**Team:** Hail Mary  
-**What to try:** Build and command a lunar mission, then compare the engineering and science consequences of another plan.
+Play: https://hail-mary-mission-control.mclaren720sfeelthesp.chatgpt.site
 
-## Three-minute walkthrough
+Source: https://github.com/Prem-333/NASA-Space-App-Challenge
 
-1. In Play, select Hidden Water and Explorer; enter Hangar.
-2. Rotate the spacecraft and open Exploded view. Change a component to see both hardware and resource margins respond.
-3. Set propellant to 500 kg. Launch is blocked with a specific explanation. Restore mission starter, then confirm.
-4. Enter Flight. Use departure → correct trajectory → recover array → insert into polar orbit → next contact. Set playback to 4× or skip animations if needed.
-5. Inspect MISSION SUCCESS, science returned against its target, fuel chart, and command log.
-6. Fly again, depart, then ignore the navigation update. The spacecraft escapes and the attempt ends in failure. Past results remain in Flight records.
+Captioned video: https://hail-mary-mission-control.mclaren720sfeelthesp.chatgpt.site/demo.mp4
 
-## What is grounded in NASA resources?
+## Five-minute review
 
-The ideal rocket equation, lunar reference facts, approximate architecture references, Blue Marble Earth imagery, and LRO-derived lunar imagery. Six linked NASA references are in Manual. Full attribution and model boundaries are in SCIENCE.md and THIRD-PARTY-NOTICES.md.
+1. Under Play, open Flight school Level 1. Level 2 and Level 3 start locked.
+2. Inspect the spacecraft and exploded view. In Science workbench change the camera wavelength to microwave: launch becomes unavailable with a specific explanation. Restore Visible.
+3. Fly departure → correct trajectory → recover array → flyby → next contact. Animations can be skipped. Read the science-product result and NASA LROC comparison. The product image is explicitly synthetic.
+4. Return to Flight school. Level 2 is unlocked and requires both terrain imaging and mineral spectroscopy. Level 3 requires all three instruments and more data capacity. Each objective has an individual success requirement.
+5. To try piloting immediately, use the free-flight Quiet Frontier lander. Fly departure → correct trajectory → recover array. Select **Pilot the final descent**. Start with thrust and steer toward the beacon. Touch down within ±35 m, below 3 m/s vertically and 2 m/s sideways. Try zero throttle to see a genuine calculated failure. Pause, reload, and resume preserve the attempt.
+6. Inspect failure reason, fuel use, report, and Flight records. Try another design or retry. Manual landing is optional; assisted arrival is available for science-focused players.
 
-## What is authored for the game?
+## NASA grounding and boundaries
 
-Hardware specifications, costs, scientific scores, operational timings, scripted faults, and impact/escape scenarios. Flight paths and scales are illustrative. There is no live NASA feed or numerical orbit propagation.
+Eight linked NASA references cover the ideal rocket equation, lunar facts, architecture context, Earth/Moon imagery, LROC/Mini-RF, and M³. The manual discloses all authored values. Full orbital motion is schematic; manual descent uses a local 2D integrator and fictional flat landing zone. No measured spectra or radar observations are processed. Hardware specifications, science scores, and fault scenarios are game parameters.
 
-## Practical details
+No API key, backend, or runtime CDN is required. Progress stays in the browser. Local fallback: run `npm start` and open http://localhost:4173.
 
-- No API key, backend or runtime CDN is required.
-- Saves and the latest 12 completed flights stay in the current browser.
-- Design links share a configuration; they do not transfer another player's save or account.
-- Controls work by pointer or keyboard; reduced-motion and non-WebGL fallbacks are supported.
-- For local review: run `npm start` in the source folder, then open `http://localhost:4173`.
-
-## Submission handoff
-
-The team must provide a publicly accessible demo URL (or explicit judge access), a source link/archive, actual member contributions, and any video required by the local event. The official full challenge page returned HTTP 502 during the final audit, so verify event-specific fields and deadlines separately. No submission has been sent on the team's behalf.
+This package has not been submitted to the event. Verify local-event fields and deadlines. TEAM.md contains the requested equal responsibility allocation, to be confirmed against actual work.

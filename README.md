@@ -4,6 +4,12 @@
 
 A complete browser game for Team Hail Mary's **Space Mission Design Game** project. Choose a lunar objective, assemble a spacecraft, pass six engineering checks, command a five-stage mission, and learn from a reproducible flight report.
 
+Play: https://hail-mary-mission-control.mclaren720sfeelthesp.chatgpt.site
+
+Source: https://github.com/Prem-333/NASA-Space-App-Challenge
+
+Captioned walkthrough: [demo.mp4](dist/demo.mp4)
+
 ## Play locally
 
 Requires Node.js 20 or newer. No API keys, account, runtime packages, or network connection are needed to play from the local server.
@@ -22,6 +28,10 @@ On Windows, `Start Hail Mary.cmd` starts the server and opens the game. If the d
 - **First Light**: a camera-equipped lunar flyby.
 - **Hidden Water**: a polar lunar orbiter with a composition-survey objective.
 - **Quiet Frontier**: a robotic lunar lander with a more demanding propulsion and science budget.
+- Three sequential flight-school levels, increasing from one to three simultaneous objectives. Completion unlocks the next assignment. Free flight remains available.
+- A science workbench with selectable objectives, wavelengths, and optical / collection systems; incompatible instruments and insufficient data capacity block launch.
+- Per-objective delivery results with explicitly synthetic product previews and sourced real NASA instrument comparisons.
+- Manual final descent: throttle, lateral thrust, local lunar gravity, fuel use, speed and landing-zone limits; pause, reload and deterministic replay. Assisted arrival remains available.
 - Two difficulty modes: Explorer and Commander.
 - Six configurable systems: propulsion, solar arrays, communications, batteries, science instruments, and launch service.
 - Adjustable propellant, mass and budget accounting, rocket-equation delta-v, steady-state power, eclipse endurance, and science/downlink checks.
@@ -66,11 +76,12 @@ npm run test:e2e
 npm run test:motion
 npm run test:outcomes
 npm run test:resilience
+npm run test:science
 ```
 
 The test suite uses the installed Google Chrome (`channel: 'chrome'`) and Playwright. It saves screenshots, download samples, and accessibility results in `artifacts/`. Automated accessibility testing is a useful check, not a claim of complete accessibility certification.
 
-55 unit tests cover the rocket equation and its inverse, mass conservation, all starter missions in both modes, blocking checks, communication bottlenecks, deterministic outcomes, replay validation, bad inputs, all 57 branches of the starter flight scenarios, and the playback clock and telemetry interpolation.
+64 unit tests cover the rocket equation and its inverse, mass conservation, all starter missions in both modes, blocking checks, communication bottlenecks, deterministic outcomes, replay validation, bad inputs, all 57 branches of the starter flight scenarios, and the playback clock and telemetry interpolation.
 
 Browser tests cover complete missions, objective success and failure, save/resume, design sharing, downloads, imports, archive preservation, local storage corruption, malformed share links, layouts at 390/768/1440 pixels, and operation with external requests blocked. Axe checks representative briefing, builder, flight, debrief, manual, and mobile screens.
 
@@ -107,7 +118,7 @@ The game needs static hosting only. Publish the contents of `dist` as the site's
 
 Three.js is bundled locally, so playing does not require npm installation or a CDN. After changing its pinned dependency, copy `three.module.js`, `three.core.js`, and `LICENSE` from `node_modules/three` into `dist/vendor`. 3D requires WebGL 2; when unavailable, a textual visualizer replaces the canvas while the game remains playable. Use a current browser with ES-module and import-map support.
 
-The Sites deployment is private by default. A private link is not sufficient for public judging; access must be intentionally changed or the portable `dist` directory deployed to a public static host before submission.
+The project owner has requested public judge access for the v1.6 release. The public play URL and source link are listed above. The portable `dist` directory is also ready for static hosting.
 
 ## Scientific scope and attribution
 

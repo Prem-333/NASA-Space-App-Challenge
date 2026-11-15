@@ -40,6 +40,8 @@ export const DEFAULT_DESIGNS = {
   lander:{engine:'cryo',power:'extended',comms:'dish',battery:'medium',payload:['radar','spectrometer'],launcher:'atlas',fuel:6000}
 };
 export const SOURCES = [
+  {title:'LRO Spacecraft & Instruments',publisher:'NASA Science',url:'https://science.nasa.gov/mission/lro/spacecraft-and-instruments/',use:'Science objectives and design comparisons: LROC surface imaging and Mini-RF lunar radar. Our instruments and generated products are fictional teaching models.'},
+  {title:'Dispersing Light through the Moon Mineralogy Mapper',publisher:'NASA / JPL-Caltech',url:'https://science.nasa.gov/photojournal/dispersing-light-through-the-moon-mineralogy-mapper/',use:'M³ imaging spectroscopy and its 0.43–3 micrometer wavelength range inform the mineral-mapping channel. No measured spectra are processed in the game.'},
   {title:'Blue Marble Earth Mosaic',publisher:'NASA / Goddard SVS',url:'https://svs.gsfc.nasa.gov/2915/',use:'Bundled Earth texture for the 3D flight view. Credit: NASA/Goddard Space Flight Center Scientific Visualization Studio; Reto Stockli (NASA/GSFC) and NASA Earth Observatory. Visualization only, not a live Earth feed.'},
   {title:'Moon Fact Sheet',publisher:'NASA / NSSDC',url:'https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html',use:'Lunar mean radius 1,737.4 km, surface gravity 1.62 m/s², and mean Earth–Moon distance 384,400 km.'},
   {title:'Ideal Rocket Equation',publisher:'NASA Glenn Research Center',url:'https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/ideal-rocket-equation/',use:'Δv = Isp × g₀ × ln(wet mass / dry mass). The builder and each simulated burn use this equation.'},

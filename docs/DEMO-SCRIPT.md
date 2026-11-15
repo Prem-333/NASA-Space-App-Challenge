@@ -1,49 +1,20 @@
-# Hail Mary — two-minute demo
+# Captioned judge walkthrough
 
-Use Hidden Water, Explorer, and the starter design. Open the game at 1440 × 1000 or similar. Start on Play. Keep playback at 4× for the recording; changing playback speed does not change the result.
+The supplied `dist/demo.mp4` is a screen recording of the actual game, with captions and no narration. It is also available at the public game URL followed by `/demo.mp4`.
 
-## 0:00–0:15 — Show the problem
+## Storyboard
 
-Show Play and the three mission choices.
+1. Introduce Hail Mary and its mission-design goal.
+2. Show the three flight-school assignments and increasing science complexity.
+3. Open the first assignment, inspect the spacecraft, and toggle exploded view.
+4. Change the camera to an incompatible wavelength. Show launch rejection, then restore Visible.
+5. Launch from low Earth orbit and show the rocket-equation departure animation.
+6. Correct navigation, recover the array, complete the flyby, and return science.
+7. Show success, the synthetic science-product preview, and the real LROC comparison.
+8. Show the next assignment unlocked.
+9. Open the free-flight lander and pilot its final descent. Cut thrust to demonstrate a calculated impact.
+10. Close with the team, source link, NASA references, and model limits.
 
-“Space missions have to fit a science objective inside a limited mass, power, fuel, and cost budget. Hail Mary lets you make those decisions and see what they do to a mission.”
+For a narrated presentation, explain that full Earth–Moon trajectories remain schematic. The manual final descent is a local 2D model; science-product illustrations are not measured NASA observations. Emphasize that every selected objective must pass, not merely the total point score.
 
-## 0:15–0:45 — Show a connected design trade-off
-
-Enter Hangar. Rotate the spacecraft and briefly toggle Exploded view. Lower propellant to 500 kg: the velocity check fails and launch is disabled. Restore the starter using Restore mission starter, then confirm.
-
-“The hardware changes the model and the engineering budget. Reducing fuel saves mass and money, but here it leaves too little velocity capability to reach the objective. NASA Glenn’s ideal rocket equation drives that calculation.”
-
-## 0:45–1:15 — Fly the successful plan
-
-Enter flight console. Commit departure burn; set playback to 4×. Correct the trajectory → Recover the solar array → Insert into polar orbit → Wait for the next contact. Pause briefly at Power management to show the command choices and science target.
-
-“Flight decisions affect propellant, power, schedule, and science. The target stays visible, and each command warns about its consequences. Recovering the array costs fuel but protects the science plan.”
-
-## 1:15–1:35 — Show evidence
-
-Show MISSION SUCCESS, the score, propellant chart, and command log. Expected Hidden Water starter result: 82.8 science / 70 target, $61.5M cost, approximately 419 m/s reserve, and 88/100.
-
-“The result is reproducible. We can inspect the decision log, download the report, or change the design and try again.”
-
-## 1:35–1:50 — Show a real loss
-
-Click Fly again. Commit departure burn, then Ignore the navigation update. Let the escape animation play, or skip to the TRAJECTORY LOST result if time is short.
-
-“The game does not award success for every path. Skipping a necessary maneuver loses the encounter. A disabled surface approach can instead produce an impact. These are explicit, scripted learning scenarios.”
-
-## 1:50–2:00 — State the boundary and purpose
-
-Open Manual, showing the NASA references.
-
-“NASA equations, reference values and imagery ground the game. Component values and failure scenarios are authored game parameters, not a flight-qualified simulator. Our aim is to make the engineering trade-offs visible and understandable.”
-
-## Recording notes
-
-- Do a complete rehearsal once before recording. Do not edit settings during the take.
-- Click commands with the pointer, or use keys 1–3 in Flight. Keyboard commands do not activate while a dialog is open.
-- Pause, speed and Skip animation affect presentation only.
-- Leave a short beat after transitions so labels and charts are readable.
-- Avoid claiming live NASA feeds, AI-generated flight advice, or numerically integrated trajectories.
-- If running offline, start `npm start` or `Start Hail Mary.cmd` before the demo. Keep the local server open.
-- The existing hosted demo is access-restricted. Give judges a public deployment or authorized access before submission.
+Re-record locally with `node scripts/record-demo.mjs` after starting the server. This requires development dependencies, installed Chrome, and Playwright FFmpeg (`npx playwright install ffmpeg`). Convert the resulting WebM to MP4 with FFmpeg if needed. These are development tools, not game dependencies.

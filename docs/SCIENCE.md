@@ -88,3 +88,16 @@ Ignoring navigation is an authored lost-encounter scenario. Disabling arrival gu
 ## Source audit — 15 November 2026
 
 All six in-game NASA reference URLs were reachable during the audit. The architecture presentation title was corrected to “How: NRHO — The Artemis Orbit.” The distinction between reference transfer costs and the authored polar-mission scenario is explicit. The official full challenge page still returned HTTP 502; event-specific submission requirements remain to be verified by the team.
+
+
+## Science compatibility and manual descent (v1.6)
+
+The workbench matches surface imaging to a visible camera and lens; mineral mapping to a visible/near-IR spectrometer and dispersive spectrograph; radar scattering to an S-band radar and antenna. M³'s 0.43–3 µm range is grounded in NASA's instrument description. The other ranges and configurations are simplified teaching choices. These are instrument classes, not reproductions of flight hardware. NASA references are linked directly in each related-mission comparison.
+
+Every objective needs usable-data coverage of at least 65% in free flight or 70%, 75%, and 80% in levels 1, 2, and 3. Coverage = min(1, downlink fraction × retained science factor). All objectives must pass, as must the mission's total science target. An invalid wavelength/collection pairing or impossible initial coverage blocks launch. Previews are authored illustrations, never measured science products. Radar scattering is not proof of water ice.
+
+Manual descent first allocates the game's 1,350 m/s capture and 1,700 m/s initial descent burns. The player then starts 180 m above a fictional flat zone, 90 m to its left, with -18 m/s vertical and +4 m/s horizontal velocity. The remaining descent uses actual integrated thrust and fuel, replacing the assisted descent's fixed final 150 m/s allowance. The selected engine's Isp sets mass flow. Maximum thrust is initial descent mass × 3.8 m/s²; this is a game parameter. Tilt is bounded to ±0.45 radians. Local gravity is 1.62 m/s². Integration uses 0.1 s steps with average mass for thrust acceleration and trapezoidal position updates. No atmosphere, ground slope, attitude dynamics, or orbital curvature is modeled.
+
+Landing requires |offset| ≤35 m, |horizontal speed| ≤2 m/s and |vertical speed| ≤3 m/s. Other ground contacts cause impact. Leaving ±350 m horizontally or exceeding 600 m altitude ends the local attempt; so does reaching 180 simulated seconds. The label “corridor exit” is a game boundary, not proof of lunar escape velocity. Keyboard and touch controls drive the same physics. Paused attempts save each simulated second and on leaving the screen. Reload starts paused. Full recorded control histories are re-integrated when restoring a result; stored outcomes and telemetry are not trusted.
+
+Commanded flight animations remain illustrative. The manual descent canvas depicts the actual local integrated state. Its terminal result then feeds the common 3D outcome, science, archive, and report flow. Both manual and assisted outcomes are distinguished in the command log.

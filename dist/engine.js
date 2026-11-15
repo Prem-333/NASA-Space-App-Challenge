@@ -1,3 +1,5 @@
+import { normalizeScience, sciencePlan, objectiveResults } from './science.js';
+import { replayDescent } from './descent.js';
 import { MISSIONS, PARTS, DEFAULT_DESIGNS } from './data.js';
 export const G0 = 9.80665;
 export const VERSION = 1;
@@ -6,7 +8,7 @@ export const getPart = (category,id) => PARTS[category].find(p => p.id === id) |
 export const clamp = (n,min,max) => Math.min(max,Math.max(min,n));
 export function normalizeDesign(input, missionId='orbiter') {
   const fallback = DEFAULT_DESIGNS[getMission(missionId).id];
-  const d = {...fallback, payload:[...fallback.payload]};
+  const d = {...fallback, payload:[...fallback.payload], science:normalizeScience(input?.science,getMission(missionId).id)};
   if (!input || typeof input !== 'object') return d;
   for(const key of ['engine','power','comms','battery','launcher']) if(PARTS[key].some(p=>p.id===input[key])) d[key]=input[key];
   if(Array.isArray(input.payload)) d.payload=[...new Set(input.payload.filter(id=>PARTS.payload.some(p=>p.id===id)))];
@@ -33,15 +35,16 @@ export function calculate(design, missionId='orbiter', mode='explorer') {
   const dataDemand=payload.reduce((s,p)=>s+p.data,0);
   const dataFraction=dataDemand?Math.min(1,comms.rate/dataDemand):0;
   const science=(mission.baseScience+payload.reduce((s,p)=>s+p.science*mission.scienceWeights[p.id],0))*dataFraction;
+  const plan=sciencePlan(d,mission.id);
   const checks=[
     {id:'fuel',label:'Velocity budget',pass:dv>=requiredDv,value:`${Math.round(dv).toLocaleString()} / ${requiredDv.toLocaleString()} m/s`,tip:'Add propellant, choose a more efficient engine, or reduce dry mass.'},
     {id:'mass',label:'Launch mass',pass:wet<=launcher.massLimit,value:`${wet.toLocaleString()} / ${launcher.massLimit.toLocaleString()} kg`,tip:'Select a larger launch vehicle or reduce total mass.'},
     {id:'budget',label:'Mission budget',pass:cost<=budget,value:`$${cost.toFixed(1)}M / $${budget.toFixed(1)}M`,tip:'Trade a heavier launcher or extra equipment for a leaner design.'},
     {id:'power',label:'Daylight power',pass:generation>=draw,value:`${Math.round(generation)} W available · ${draw} W used`,tip:'Choose a larger solar array or reduce instrument and communication loads.'},
     {id:'battery',label:'Eclipse endurance',pass:usableEnergy>=energyRequired,value:`${Math.round(usableEnergy)} / ${Math.round(energyRequired)} Wh`,tip:'Increase battery storage or reduce power demand.'},
-    {id:'science',label:'Science objective',pass:d.payload.includes(mission.required)&&science>=mission.minScience,value:`${Math.round(science)} / ${mission.minScience} science · ${getPart('payload',mission.required).name} required`,tip:`Include the ${getPart('payload',mission.required).name.toLowerCase()} and enough downlink capacity.`}
+    {id:'science',label:'Science objective',pass:d.payload.includes(mission.required)&&science>=mission.minScience&&plan.valid&&dataFraction>=plan.minimum,value:`${Math.round(science)} / ${mission.minScience} science · ${getPart('payload',mission.required).name} required`,tip:plan.errors.join(' ')||(dataFraction<plan.minimum?`Increase downlink capacity: each objective needs ${Math.round(plan.minimum*100)}% usable data, but this link supports ${Math.round(dataFraction*100)}%.`:'')||`Include the ${getPart('payload',mission.required).name.toLowerCase()} and enough downlink capacity.`}
   ];
-  return {design:d,mission,engine,power,comms,battery,launcher,payload,dry,wet,cost,draw,generation,energyRequired,usableEnergy,dv,requiredDv,budget,dataDemand,dataFraction,science,checks,ready:checks.every(c=>c.pass),passed:checks.filter(c=>c.pass).length};
+  return {design:d,mission,engine,power,comms,battery,launcher,payload,dry,wet,cost,draw,generation,energyRequired,usableEnergy,dv,requiredDv,budget,dataDemand,dataFraction,science,plan,checks,ready:checks.every(c=>c.pass),passed:checks.filter(c=>c.pass).length};
 }
 export const FLIGHT_STAGES=[
   {name:'Earth departure',short:'Departure',distance:1200,description:'The launch service has delivered your spacecraft to low Earth orbit. Commit to the translunar burn.'},
@@ -82,8 +85,15 @@ export function flightChoices(f) {
   ];
   return [];
 }
+export function descentInitial(f){
+  const c=calculate(f.design,f.missionId,f.mode);
+  const setupFuel=fuelForBurn(c.dry+f.fuel,c.mission.capture+1700,c.engine.isp);
+  if(f.missionId!=='lander'||f.step!==3||f.complete||setupFuel>f.fuel)throw new Error('Descent is unavailable.');
+  return {dry:c.dry,fuel:f.fuel-setupFuel,isp:c.engine.isp};
+}
 export function advanceFlight(f,choiceId) {
   if(f.complete) return f;
+  if(choiceId && typeof choiceId==='object')return finishDescent(f,choiceId);
   const choice=flightChoices(f).find(c=>c.id===choiceId);
   if(!choice) throw new Error('Unknown flight command.');
   const c=calculate(f.design,f.missionId,f.mode);
@@ -102,14 +112,28 @@ export function advanceFlight(f,choiceId) {
 export function summarize(f) {
   const c=calculate(f.design,f.missionId,f.mode);
   const science=f.failed?0:c.science*f.scienceFactor;
-  const objectiveMet=!f.failed&&f.complete&&science>=c.mission.minScience;
+  const objectives=objectiveResults(f,c.dataFraction);
+  const objectiveMet=!f.failed&&f.complete&&science>=c.mission.minScience&&objectives.every(o=>o.met);
   const scienceScore=clamp(science/c.mission.minScience*45,0,65);
   const efficiency=clamp((1-c.cost/c.budget)*50+10,0,20);
   const resilience=clamp(remainingDv(f)/300*15,0,15);
   const score=f.failed?0:Math.round(scienceScore+efficiency+resilience);
-  return {science,objectiveMet,score,grade:f.failed?'Mission failed':f.complete&&!objectiveMet?'Objective missed':!f.complete?'In progress':score>=90?'Exceptional':score>=75?'Mission accomplished':score>=55?'Promising flight':'Lessons learned',cost:c.cost,reserve:remainingDv(f),duration:c.mission.days*24+f.extraHours};
+  return {science,objectives,objectiveMet,score,grade:f.failed?'Mission failed':f.complete&&!objectiveMet?'Objective missed':!f.complete?'In progress':score>=90?'Exceptional':score>=75?'Mission accomplished':score>=55?'Promising flight':'Lessons learned',cost:c.cost,reserve:remainingDv(f),duration:c.mission.days*24+f.extraHours};
 }
 export function restoreFlight(raw) {
   if(!raw || raw.version!==VERSION || !MISSIONS.some(m=>m.id===raw.missionId) || !['explorer','commander'].includes(raw.mode) || !Array.isArray(raw.decisions) || raw.decisions.length>5) return null;
-  try { let f=createFlight(raw.design,raw.missionId,raw.mode); for(const decision of raw.decisions){ if(f.complete)return null; f=advanceFlight(f,decision); } f.name=typeof raw.name==='string'?raw.name.slice(0,40):'Hail Mary I'; return f; } catch { return null; }
+  try { let f=createFlight(raw.design,raw.missionId,raw.mode); for(const decision of raw.decisions){ if(f.complete)return null; f=advanceFlight(f,decision); } if(raw.manualControls&&f.step===3&&!f.complete){replayDescent(descentInitial(f),raw.manualControls);f.manualControls=raw.manualControls;} f.name=typeof raw.name==='string'?raw.name.slice(0,40):'Hail Mary I'; return f; } catch { return null; }
+}
+
+function finishDescent(f,decision){
+  if(decision.id!=='manual-arrival')throw new Error('Unknown descent command.');
+  const initial=descentInitial(f),result=replayDescent(initial,decision.controls);
+  if(result.status==='flying')throw new Error('Complete the descent before committing the result.');
+  const failed=result.status!=='landed',c=calculate(f.design,f.missionId,f.mode);
+  const fuelUsed=f.fuel-result.fuel,dv=deltaV(c.dry+f.fuel,c.dry+result.fuel,c.engine.isp);
+  const next={...f,manualControls:undefined,descentResult:result,fuel:result.fuel,step:failed?3:4,failed,complete:failed,outcome:failed?result.status:null,failureReason:failed?result.reason:null,scienceFactor:failed?0:f.scienceFactor,
+    decisions:[...f.decisions,{id:'manual-arrival',controls:decision.controls.map(c=>[...c])}],
+    log:[...f.log,{stage:'Lunar arrival',command:'Pilot the final descent',dv,fuel:fuelUsed,result:`${result.reason} Final descent: ${result.time.toFixed(1)} s; x ${result.x.toFixed(1)} m; vertical ${Math.abs(result.vy).toFixed(1)} m/s; sideways ${Math.abs(result.vx).toFixed(1)} m/s.`}],
+    history:[...f.history,{stage:'Arrival',fuel:result.fuel,science:0}]};
+  return next;
 }

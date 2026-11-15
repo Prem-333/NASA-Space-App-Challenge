@@ -3,7 +3,7 @@ import {execFile} from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
 const root = resolve('dist');
-const types = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.jpg':'image/jpeg','.png':'image/png','.svg':'image/svg+xml','.woff2':'font/woff2','.ttf':'font/ttf','.webmanifest':'application/manifest+json'};
+const types = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.jpg':'image/jpeg','.png':'image/png','.svg':'image/svg+xml','.woff2':'font/woff2','.ttf':'font/ttf','.webmanifest':'application/manifest+json','.mp4':'video/mp4','.webm':'video/webm'};
 const port = Number(process.env.PORT || 4173);
 if(!Number.isInteger(port)||port<1||port>65535){console.error('PORT must be a number from 1 to 65535.');process.exit(1);}
 const server=http.createServer(async (req,res) => {
