@@ -117,3 +117,14 @@ body .nav-item>span,body.flight-game .nav-item>span{font-size:inherit;line-heigh
 .cinema[data-paused=true] *,.cinema[data-paused=true] *:before,.cinema[data-paused=true] *:after{animation-play-state:paused!important}
 
 @media(max-width:600px){.cinema-controls{display:grid;grid-template-columns:1fr;gap:8px;height:104px;padding:12px}.camera-presets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%;gap:5px}.camera-presets button{min-width:0}.transport-controls{justify-content:flex-end;gap:6px}.cinema-bottom{height:44px}.flight-game .scene-readouts,.flight-game .executing .scene-readouts{top:auto;bottom:168px}.flight-game .scene-coordinate{top:auto;bottom:229px}.flight-game .maneuver-overlay{top:auto;bottom:231px}.cinema:fullscreen .flight-scene,.cinema.expanded .flight-scene,.cinema:fullscreen .cinema-vignette,.cinema.expanded .cinema-vignette{height:calc(100dvh - 148px)}.cinema:fullscreen .cinema-controls,.cinema.expanded .cinema-controls{height:104px}.game-ending .scene-coordinate{bottom:25px}}
+
+/* Descent uses the flight scene as the primary play surface. */
+.manual-viewport{padding:0;overflow:hidden;min-height:0;background:#080c10}
+.descent-view-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px 24px;border-bottom:1px solid #303a40}
+.descent-view-heading h2{font-size:25px;margin:4px 0 0}.descent-view-heading .label{font-size:10px}
+.descent-views{display:flex;gap:4px}.descent-views button{font:inherit;font-size:12px;background:#10191f;color:#c5cdd0;border:1px solid #4b585f;border-radius:4px;padding:9px 12px;cursor:pointer}.descent-views button[aria-pressed=true]{background:#d8decd;color:#18211b;border-color:#d8decd}.descent-views button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.descent-stage{height:560px;position:relative;overflow:hidden;background:#030509}.manual-viewport .descent-stage canvas{display:block;width:100%;height:100%;aspect-ratio:auto;border:0;margin:0;border-radius:0}
+.descent-target{position:absolute;transform:translate(-50%,-50%);font:10px monospace;letter-spacing:.04em;padding:7px 9px;background:#0b101ce6;border:1px solid #b9a983;color:#ffe7af;white-space:nowrap;pointer-events:none}
+.descent-scene-note{position:absolute;bottom:12px;left:14px;font:9px monospace;color:#e0e0dc;background:#10141bcc;padding:5px;pointer-events:none}
+.manual-viewport .descent-main-status{padding:14px 24px;margin:0;border-top:1px solid #303a40;font-size:12px}
+@media(max-width:900px){.manual-viewport{padding:0}.descent-view-heading{padding:13px}.descent-view-heading h2{font-size:21px}.descent-stage{height:380px}.descent-views button{padding:8px;font-size:11px}.manual-viewport .descent-main-status{padding:12px;font-size:11px}}

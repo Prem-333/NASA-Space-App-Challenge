@@ -10,6 +10,8 @@ Source: https://github.com/Prem-333/NASA-Space-App-Challenge
 
 Captioned walkthrough: [demo.mp4](dist/demo.mp4)
 
+Manual descent now features a 3D lander, Chase and Approach cameras, procedural lunar terrain, sunlight shadows, and surface dust. Flight controls still use the same deterministic landing simulation. See [release 1.8](docs/RELEASE-v1.8.md).
+
 ## Play locally
 
 Requires Node.js 20 or newer. No API keys, account, runtime packages, or network connection are needed to play from the local server.

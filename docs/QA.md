@@ -106,3 +106,7 @@ Automated and sampled visual checks do not prove that all devices or every possi
 ## v1.7 animation verification
 
 68 unit tests, including phase/framing bounds, portrait framing, frame-rate-independent damping, reduced-motion framing, and exhaust ignition/cutoff. The cinematic browser suite compares actual rendered-frame hashes before/after a pause to verify a fully frozen camera and scene. It also covers the automatic-to-manual camera handoff, return to Director, shader errors and mobile overflow. Performance scales resolution after sustained slow frames; exact throughput is device-dependent.
+
+## v1.8 3D descent
+
+`npm run test:descent-visual` verifies the 3D renderer, both camera modes, exact pause freeze, narrow layouts, near-ground framing, and a playable 2D fallback when WebGL is unavailable. `npm run test:science` verifies both piloted mission outcomes and accessible descent controls. Existing cinematic tests cover the shared spacecraft textures after extraction.

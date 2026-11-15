@@ -106,3 +106,8 @@ Commanded flight animations remain illustrative. The manual descent canvas depic
 ## Cinematic presentation (v1.7)
 
 Director framing, field-of-view changes, exhaust appearance, attitude-control pulses, subtle antenna/gimbal movements, terrain scenery, ground shadows, and regolith particles are authored visual effects. They do not change the mission calculation or represent validated spacecraft systems. Manual descent draws interpolated states between fixed physics steps; telemetry uses the current authoritative step. Background relief is explicitly schematic and never changes the flat collision surface. The Earth sky reference is illustrative, not a calculated viewing geometry. The Moon's color texture contributes subtle bump shading for visual detail; it is not a digital elevation model. UI and presentation clocks pause independently of committed mission commands; reduced motion freezes autonomous presentation.
+
+
+## 3D descent presentation (v1.8)
+
+The 3D descent renderer uses physics-frame metres for position and the selected craft design. Its spacecraft geometry is an illustrative model. Steering directly sets the displayed tilt; no rotational dynamics have been added. The landing zone has a 35 m radius, intersecting the one-dimensional ground track at the existing ±35 m boundaries. Procedural crater relief stays outside the flat flight corridor; rocks, beacons, surface dust and sunlight are visual only. Chase and Approach views never alter controls or results. The 2D display is retained as a fallback when WebGL cannot initialize.
