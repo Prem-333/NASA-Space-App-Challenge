@@ -101,3 +101,8 @@ Automated and sampled visual checks do not prove that all devices or every possi
 - New science browser suite: all three unlocks, mismatch rejection and persistence, per-objective products, mission comparisons, manual pause/reload, calculated impact, successful resumed descent, 320–1440 px descent layouts, and four additional axe states.
 - Existing functional (10 axe states), motion (3), outcome (1), and resilience suites retained.
 - No claim of exhaustive physical validation or complete accessibility certification. See SCIENCE.md for integration assumptions and limits.
+
+
+## v1.7 animation verification
+
+68 unit tests, including phase/framing bounds, portrait framing, frame-rate-independent damping, reduced-motion framing, and exhaust ignition/cutoff. The cinematic browser suite compares actual rendered-frame hashes before/after a pause to verify a fully frozen camera and scene. It also covers the automatic-to-manual camera handoff, return to Director, shader errors and mobile overflow. Performance scales resolution after sustained slow frames; exact throughput is device-dependent.

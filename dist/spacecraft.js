@@ -1,11 +1,12 @@
+import { makePlume } from './scene-effects.js';
 import * as T from 'three';
 
 // Conceptual lunar spacecraft: separate serviceable assemblies share selection categories.
 export function createCraft(design, missionId, solarMap = null, foilMap = null) {
   const group = new T.Group(), systems = {}, pickables = [], wings = [];
   const materials = {
-    gold: new T.MeshStandardMaterial({color: '#ac8641', metalness: .72, roughness: .48, bumpMap: foilMap, bumpScale: .035}),
-    silver: new T.MeshStandardMaterial({color: '#b2b6b7', metalness: .72, roughness: .35}),
+    gold: new T.MeshStandardMaterial({color: '#ac8641', metalness: .82, roughness: .38, bumpMap: foilMap, bumpScale: .035}),
+    silver: new T.MeshStandardMaterial({color: '#b2b6b7', metalness: .85, roughness: .26}),
     dark: new T.MeshStandardMaterial({color: '#25282c', metalness: .65, roughness: .5}),
     blue: new T.MeshStandardMaterial({map: solarMap, color: '#b0bdcf', metalness: .38, roughness: .3, side: T.DoubleSide}),
     white: new T.MeshStandardMaterial({color: '#d9d7cd', metalness: .12, roughness: .8}),
@@ -64,11 +65,7 @@ export function createCraft(design, missionId, solarMap = null, foilMap = null) 
     strut([s*.35,.26,0],[s*.12,.32,0],.023,'silver',engine);
     strut([s*.43,.2,.25],[s*.18,-.1,.08],.025,'silver',engine);
   }
-  const plume=new T.Group(); engine.add(plume); plume.position.y=-.55; plume.visible=false;
-  for(let i=0;i<3;i++) {
-    const m=new T.Mesh(new T.ConeGeometry(radius*(.65+i*.15),1.8+i*.4,24,1,true),new T.MeshBasicMaterial({color:i?'#6b9fd0':'#e7f4ff',transparent:true,opacity:i?.12:.65,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide}));
-    m.rotation.z=Math.PI;m.position.y=-.9-i*.2;plume.add(m);
-  }
+  const exhaust=makePlume(radius),plume=exhaust.group;engine.add(plume);plume.position.y=-.55;
   const span={compact:1.35,extended:1.95,redundant:2.55}[design.power];
   for(const sign of [-1,1]) {
     const wing=system(sign<0?'port':'starboard','power',[sign*.72,.05,0],[sign*1.2,0,0],sign<0?'PORT ARRAY':'STBD ARRAY');wings.push(wing);
@@ -113,10 +110,13 @@ export function createCraft(design, missionId, solarMap = null, foilMap = null) 
       if(id==='spectrometer')box([.12,.24,.13],'white',payload,[x,.24,.08]);
     }
   });
+  const rcs=[];
+  const statusLight=new T.Mesh(new T.SphereGeometry(.018,8,6),new T.MeshBasicMaterial({color:'#b5f2cc'}));statusLight.position.set(.66,.5,.45);bus.add(statusLight);
   // Thruster pods on the bus stay attached when service assemblies are separated.
   for(const s of [-1,1])for(const z of [-1,1]) {
     box([.13,.14,.13],'silver',bus,[s*.7,.45,z*.63]);
     cylinder(.025,.055,.12,'dark',bus,[s*.7,.45,z*.73],[Math.PI/2,0,0]);
+    const jet=new T.Mesh(new T.ConeGeometry(.035,.25,12),new T.MeshBasicMaterial({color:'#accfff',transparent:true,opacity:.45,blending:T.AdditiveBlending,depthWrite:false}));jet.position.set(s*.7,.45,z*.91);jet.rotation.x=z*Math.PI/2;jet.visible=false;bus.add(jet);rcs.push(jet);
   }
   if(missionId==='lander')for(let i=0;i<4;i++) {
     const a=i*Math.PI/2+Math.PI/4,c=Math.cos(a),s=Math.sin(a);
@@ -124,5 +124,5 @@ export function createCraft(design, missionId, solarMap = null, foilMap = null) 
     strut([c*.6,-.65,s*.6],[c*1.15,-1.2,s*1.15],.025,'gold',bus);
     cylinder(.21,.26,.06,'gold',bus,[c*1.35,-1.52,s*1.35]);
   }
-  return {group,systems,pickables,plume,wings,materials};
+  return {group,systems,pickables,plume,wings,materials,rcs,statusLight,updatePlume:exhaust.update};
 }

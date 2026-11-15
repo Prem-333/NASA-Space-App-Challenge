@@ -38,6 +38,10 @@ On Windows, `Start Hail Mary.cmd` starts the server and opens the game. If the d
 - Five flight commands with choices that trade propellant, schedule, power and scientific return.
 - A rule-based flight director that explains the player's actual engineering margins.
 - An interactive 3D spacecraft bay: drag to rotate, inspect systems, and toggle an animated exploded view. Array size, antenna, instruments, battery and engine reflect the selected hardware.
+- Director camera with phase-specific tracking, damped target/focal-length changes, retained camera position across command handoffs, and immediate manual override.
+- Physically based material reflections, tapered shader exhaust, attitude-control pulses, varied stars, and a daylit Earth atmosphere.
+- Layered lunar descent scenery, camera tracking, interpolated motion, velocity vector, ground shadow, and ballistic regolith effects close to the surface.
+- Adaptive rendering resolution, reduced-motion support, exact paused frames, and resource cleanup.
 - A cinematic Earth-to-Moon flight view with NASA textures, moving spacecraft, engine plumes, orbital guides and three camera presets.
 - Countdown and maneuver playback with continuously updated fuel and delta-v, pause/resume, 0.5×/1×/2×/4× speed, skip, and an expanded view.
 - Exact command consequences previewed on hover or keyboard focus. Changing playback speed never changes the mission result.
@@ -77,11 +81,12 @@ npm run test:motion
 npm run test:outcomes
 npm run test:resilience
 npm run test:science
+npm run test:cinematic
 ```
 
 The test suite uses the installed Google Chrome (`channel: 'chrome'`) and Playwright. It saves screenshots, download samples, and accessibility results in `artifacts/`. Automated accessibility testing is a useful check, not a claim of complete accessibility certification.
 
-64 unit tests cover the rocket equation and its inverse, mass conservation, all starter missions in both modes, blocking checks, communication bottlenecks, deterministic outcomes, replay validation, bad inputs, all 57 branches of the starter flight scenarios, and the playback clock and telemetry interpolation.
+68 unit tests cover the rocket equation and its inverse, mass conservation, all starter missions in both modes, blocking checks, communication bottlenecks, deterministic outcomes, replay validation, bad inputs, all 57 branches of the starter flight scenarios, and the playback clock and telemetry interpolation.
 
 Browser tests cover complete missions, objective success and failure, save/resume, design sharing, downloads, imports, archive preservation, local storage corruption, malformed share links, layouts at 390/768/1440 pixels, and operation with external requests blocked. Axe checks representative briefing, builder, flight, debrief, manual, and mobile screens.
 

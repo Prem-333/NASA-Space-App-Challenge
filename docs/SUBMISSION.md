@@ -54,7 +54,7 @@ HTML, CSS and modular JavaScript; a pure calculation/state-transition engine; lo
 
 ## Validation
 
-64 unit tests cover physical relationships, constraints, both difficulty modes, state replay, spacecraft assemblies, risk forecasts, and animation telemetry. All 57 reachable starter branches are traversed. Browser suites cover the three missions, impact and escape, missed science objectives, retry, saving, share links, imports/exports, and 320–1440 px layouts. The release audit also tests corrupted records, unavailable storage, refresh-to-resume, and protection against replacing an unfinished flight from the archive. Accessibility checks use axe-core; this is automated coverage, not a claim of complete accessibility certification. See QA.md for results and limits.
+68 unit tests cover physical relationships, constraints, both difficulty modes, state replay, spacecraft assemblies, risk forecasts, and animation telemetry. All 57 reachable starter branches are traversed. Browser suites cover the three missions, impact and escape, missed science objectives, retry, saving, share links, imports/exports, and 320–1440 px layouts. The release audit also tests corrupted records, unavailable storage, refresh-to-resume, and protection against replacing an unfinished flight from the archive. Accessibility checks use axe-core; this is automated coverage, not a claim of complete accessibility certification. See QA.md for results and limits.
 
 ## Honest limitations
 

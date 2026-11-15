@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {shot,damping,smooth,plumeEnvelope} from '../dist/cinematography.js';
+test('all phase and failure shots stay finite and frame portrait screens safely',()=>{for(let stage=0;stage<6;stage++)for(const progress of [0,.25,.65,1])for(const outcome of [null,'impact','escape']){const input={stage,progress,time:100,burning:true,outcome},wide=shot({...input,aspect:1.5}),portrait=shot({...input,aspect:.6});assert.ok(Object.values(wide).every(Number.isFinite));assert.ok(portrait.distance>wide.distance);assert.ok(wide.fov>=35&&wide.fov<=45);assert.ok(wide.distance>=3.5);}});
+test('camera damping is independent of the number of rendered frames',()=>{const integrate=(n,dt)=>{let x=0;for(let i=0;i<n;i++)x+=(1-x)*damping(dt);return x;};assert.ok(Math.abs(integrate(60,1/60)-integrate(30,1/30))<1e-10);assert.equal(damping(-1),0);});
+test('reduced-motion framing has no drift or ignition impulse',()=>{assert.deepEqual(shot({stage:1,time:0,motion:false,burning:true,progress:.5}),shot({stage:1,time:1000,motion:false,burning:true,progress:.5}));});
+test('exhaust is off at idle and smoothly enters and exits a burn',()=>{for(const p of [0,.1,.5,.9,1])assert.equal(plumeEnvelope(p,false),0);assert.equal(plumeEnvelope(0,true),0);assert.equal(plumeEnvelope(1,true),0);assert.equal(plumeEnvelope(.5,true),1);assert.ok(plumeEnvelope(.02,true)<plumeEnvelope(.05,true));assert.ok(plumeEnvelope(.98,true)<plumeEnvelope(.95,true));assert.equal(smooth(-3),0);assert.equal(smooth(9),1);});

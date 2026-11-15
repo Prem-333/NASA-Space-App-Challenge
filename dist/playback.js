@@ -15,7 +15,7 @@ export function sampleManeuver(before,after,progress){
   const log=after.log.at(-1);
   const burn=after.failed&&!after.descentResult?0:(log?.dv||0)*p;
   const fuel=after.failed&&!after.descentResult?before.fuel:Math.max(0,(c.dry+before.fuel)*Math.exp(-burn/(c.engine.isp*9.80665))-c.dry);
-  return {progress:p,outcome:after.outcome||null,eventProgress:p,originRoute:ROUTE_STEPS[before.step],fuel:p===1?after.fuel:fuel,dv:deltaV(c.dry+fuel,c.dry,c.engine.isp),
+  return {active:true,stage:before.step,progress:p,outcome:after.outcome||null,eventProgress:p,originRoute:ROUTE_STEPS[before.step],fuel:p===1?after.fuel:fuel,dv:deltaV(c.dry+fuel,c.dry,c.engine.isp),
     power:c.generation*(before.generationFactor+(after.generationFactor-before.generationFactor)*p),
     science:before.scienceFactor+(after.scienceFactor-before.scienceFactor)*p,
     route:ROUTE_STEPS[before.step]+(ROUTE_STEPS[after.step]-ROUTE_STEPS[before.step])*p,
